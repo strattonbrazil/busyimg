@@ -15,10 +15,12 @@ const IS_DEVELOPMENT: boolean = process.env.NODE_ENV === "development";
 
 if (IS_DEVELOPMENT) {
     auth(passport, "/auth/google/callback");
+    console.log("starting app in development mode");
 } else { 
     // NOTE: need absoute url, for some reason was resolving to http
     //       when deployed, which made SSO fail
     auth(passport, "https://busyimg.com/auth/google/callback");
+    console.log("starting app in production mode");
 }
 app.use(passport.initialize());
 
