@@ -9,8 +9,6 @@ const app = express()
 auth(passport);
 app.use(passport.initialize());
 
-
-
 if (!process.env.GOOGLE_CLIENT_ID || !process.env.GOOGLE_CLIENT_SECRET) {
     console.error("no Google auth envs located");
     process.exit(1);
@@ -20,7 +18,7 @@ const port = process.env.PORT || process.argv[2] || 8080
 
 app.set('view engine', 'ejs');
 
-function requireHTTPS(req, res, next) {
+function requireHTTPS(req: any, res: any, next: any) {
     // The 'x-forwarded-proto' check is for Heroku
     if (!req.secure && req.get('x-forwarded-proto') !== 'https' && process.env.NODE_ENV !== "development") {
         console.log("redirecting to https");
@@ -48,19 +46,19 @@ app.get('/auth/google/callback',
     passport.authenticate('google', {
         failureRedirect: '/'
     }),
-    (req, res) => {
+    (req: any, res: any) => {
         console.log(JSON.stringify(req.user));
         req.session.token = req.user.token;
         res.redirect('/');
     }
 );
 
-app.get('/signout', (req, res) => {
+app.get('/signout', (req: any, res: any) => {
     req.session.token = null;
     res.redirect('/');
 })
 
-app.get('/', (req, res) => {
+app.get('/', (req: any, res: any) => {
     if (req.session.token) {
         console.log("valid token");
         //res.cookie('token', req.session.token);
