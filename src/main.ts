@@ -1,6 +1,7 @@
+import { registerPassport } from "./auth"
+
 const express = require('express')
 const passport = require('passport')
-const auth = require('./auth')
 const cookieParser = require('cookie-parser')
 const cookieSession = require('cookie-session')
 
@@ -14,14 +15,13 @@ const app = express()
 const IS_DEVELOPMENT: boolean = process.env.NODE_ENV === "development";
 
 if (IS_DEVELOPMENT) {
-    auth(passport, "/auth/google/callback");
     console.log("starting app in development mode");
 } else { 
-    // NOTE: need absoute url, for some reason was resolving to http
-    //       when deployed, which made SSO fail
-    auth(passport, "https://busyimg.com/auth/google/callback");
     console.log("starting app in production mode");
 }
+
+registerPassport(passport);
+
 app.use(passport.initialize());
 
 const port = process.env.PORT || process.argv[2] || 8080
@@ -31,8 +31,8 @@ app.set('view engine', 'ejs');
 function requireHTTPS(req: any, res: any, next: any) {
     // The 'x-forwarded-proto' check is for Heroku
     if (!req.secure && req.get('x-forwarded-proto') !== 'https' && !IS_DEVELOPMENT) {
-        console.log("redirecting to https");
-      return res.redirect('https://' + req.get('host') + req.url);
+        console.log("redirecting to https: " + req.url);
+        return res.redirect('https://' + req.get('host') + req.url);
     }
     next();
 }
