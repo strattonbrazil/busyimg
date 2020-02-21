@@ -4,15 +4,23 @@ const auth = require('./auth')
 const cookieParser = require('cookie-parser')
 const cookieSession = require('cookie-session')
 
-const app = express()
-
-auth(passport);
-app.use(passport.initialize());
-
 if (!process.env.GOOGLE_CLIENT_ID || !process.env.GOOGLE_CLIENT_SECRET) {
     console.error("no Google auth envs located");
     process.exit(1);
 }
+
+const app = express()
+
+const IS_DEVELOPMENT: boolean = process.env.NODE_ENV === "development";
+
+if (IS_DEVELOPMENT) {
+    auth(passport, "/auth/google/callback");
+} else { 
+    // NOTE: need absoute url, for some reason was resolving to http
+    //       when deployed, which made SSO fail
+    auth(passport, "https://busyimg.com/auth/google/callback");
+}
+app.use(passport.initialize());
 
 const port = process.env.PORT || process.argv[2] || 8080
 
@@ -20,7 +28,7 @@ app.set('view engine', 'ejs');
 
 function requireHTTPS(req: any, res: any, next: any) {
     // The 'x-forwarded-proto' check is for Heroku
-    if (!req.secure && req.get('x-forwarded-proto') !== 'https' && process.env.NODE_ENV !== "development") {
+    if (!req.secure && req.get('x-forwarded-proto') !== 'https' && !IS_DEVELOPMENT) {
         console.log("redirecting to https");
       return res.redirect('https://' + req.get('host') + req.url);
     }
