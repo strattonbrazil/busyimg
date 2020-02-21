@@ -18,7 +18,11 @@
             <div class="inner">
             <h3 class="masthead-brand">BusyImg</h3>
             <nav class="nav nav-masthead justify-content-center">
-                <a class="nav-link" href="/auth/google">Login to Upload an Image</a> 
+                <% if (logged_in) { %>
+                    <a class="nav-link" href="/signout">Logout</a> 
+                <% } else { %>
+                    <a class="nav-link" href="/auth/google">Login to Upload an Image</a> 
+                <% } %>
                 <!--
                     <a href="#" onclick="signOut();">Sign out</a>
 <script>

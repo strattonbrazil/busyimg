@@ -55,6 +55,11 @@ app.get('/auth/google/callback',
     }
 );
 
+app.get('/signout', (req, res) => {
+    req.session.token = null;
+    res.redirect('/');
+})
+
 app.get('/', (req, res) => {
     if (req.session.token) {
         console.log("valid token");
@@ -70,7 +75,9 @@ app.get('/', (req, res) => {
         //});
     }
 
-    res.render('pages/index');
+    res.render('pages/index', {
+        "logged_in" : !!req.session.token
+    });
 })
 
 console.log(process.env.NODE_ENV);
