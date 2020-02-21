@@ -16,11 +16,17 @@ const IS_DEVELOPMENT: boolean = process.env.NODE_ENV === "development";
 
 if (IS_DEVELOPMENT) {
     console.log("starting app in development mode");
+
+    registerPassport(passport, "/auth/google/callback");
 } else { 
     console.log("starting app in production mode");
+
+    // for some reason on prod the passport callback url is resolving to http, 
+    // which fails.  For now hardcoding full path.  :(
+    registerPassport(passport, "https://busyimg.com/auth/google/callback");
 }
 
-registerPassport(passport);
+
 
 app.use(passport.initialize());
 
