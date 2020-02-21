@@ -5,5 +5,5 @@ Get the Google credentials [here](https://console.developers.google.com/apis/cre
 ```
 export GOOGLE_CLIENT_ID="..."
 export GOOGLE_CLIENT_SECRET="..."
-NODE_ENV=development npx nodemon index.js
+NODE_ENV=development npx nodemon ./src/index.js
 ```
