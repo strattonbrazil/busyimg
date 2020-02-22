@@ -4,8 +4,8 @@ const express = require('express')
 const passport = require('passport')
 const cookieParser = require('cookie-parser')
 const cookieSession = require('cookie-session')
-const https = require("https")
 const fs = require("fs")
+const httpProxy = require('http-proxy')
 
 if (!process.env.GOOGLE_CLIENT_ID || !process.env.GOOGLE_CLIENT_SECRET) {
     console.error("no Google auth envs located");
@@ -26,12 +26,22 @@ registerPassport(passport, "/auth/google/callback");
 
 app.use(passport.initialize());
 
-const port = process.env.PORT || process.argv[2] || 8080
+// returns the port exposed to external requests
+function getExternalPort(): number {
+    if (process.env.PORT) {
+        return parseInt(process.env.PORT, 10);
+    } else if (process.argv[2]) {
+        return parseInt(process.argv[2], 10);
+    } else {
+        return 8080;
+    }
+}
+const EXTERNAL_PORT = getExternalPort();
 
 app.set('view engine', 'ejs');
 
 function requireHTTPS(req: any, res: any, next: any) {
-    // The 'x-forwarded-proto' check is for Heroku
+    // The 'x-forwarded-proto' check is for Heroku proxy
     if (!req.secure && req.get('x-forwarded-proto') !== 'https') {
         console.log("redirecting to https: " + req.url);
         return res.redirect('https://' + req.get('host') + req.url);
@@ -90,17 +100,28 @@ app.get('/', (req: any, res: any) => {
     });
 })
 
-// create a simple HTTPS server for local use so it behaves similar to prod
-function getHttpsListener(): number {
-    if (!IS_DEVELOPMENT) { throw Error("starting prod environment with dummy certs") }
-
-    const dummyKey = fs.readFileSync('./dummy/key.pem');
-    const dummyCert = fs.readFileSync('./dummy/cert.pem');
-    return https.createServer({key: dummyKey, cert: dummyCert }, app);
+function startBusyImg(port: number) {
+    app.listen(port, () => console.log(`Starting busyimg on port ${port}!`));
 }
 
-const listener = IS_DEVELOPMENT ? 
-    getHttpsListener() :
-    app;
-listener.listen(port, () => console.log(`Example app listening on port ${port}!`))
+// run local server through HTTPS proxy so it behaves similarly to Heroku environment
+if (IS_DEVELOPMENT) {
+    const proxiedPort = 9090; // don't hit this directly
+    startBusyImg(proxiedPort);
 
+    httpProxy.createServer({
+        target: {
+            host: 'localhost',
+            port: proxiedPort
+        },
+        ssl: {
+            key: fs.readFileSync('./dummy/key.pem', 'utf8'),
+            cert: fs.readFileSync('./dummy/cert.pem', 'utf8')
+        },
+        xfwd: true // add X-Forward-* headers as Heroku does
+    }).listen(EXTERNAL_PORT);
+
+    console.log("open your browser to: https://localhost:" + EXTERNAL_PORT);
+} else {
+    startBusyImg(EXTERNAL_PORT);
+}

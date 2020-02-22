@@ -10,7 +10,8 @@ export function registerPassport(passport: any, callbackURL: string) {
     passport.use(new GoogleStrategy({
             clientID: process.env.GOOGLE_CLIENT_ID,
             clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-            callbackURL: callbackURL
+            callbackURL: callbackURL,
+            proxy: true
         },
         (token: any, refreshToken: any, profile: any, done: any) => {
             return done(null, {
