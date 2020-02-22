@@ -4,6 +4,8 @@ const express = require('express')
 const passport = require('passport')
 const cookieParser = require('cookie-parser')
 const cookieSession = require('cookie-session')
+const https = require("https")
+const fs = require("fs")
 
 if (!process.env.GOOGLE_CLIENT_ID || !process.env.GOOGLE_CLIENT_SECRET) {
     console.error("no Google auth envs located");
@@ -16,17 +18,11 @@ const IS_DEVELOPMENT: boolean = process.env.NODE_ENV === "development";
 
 if (IS_DEVELOPMENT) {
     console.log("starting app in development mode");
-
-    registerPassport(passport, "/auth/google/callback");
 } else { 
     console.log("starting app in production mode");
-
-    // for some reason on prod the passport callback url is resolving to http, 
-    // which fails.  For now hardcoding full path.  :(
-    registerPassport(passport, "https://busyimg.com/auth/google/callback");
 }
 
-
+registerPassport(passport, "/auth/google/callback");
 
 app.use(passport.initialize());
 
@@ -36,7 +32,7 @@ app.set('view engine', 'ejs');
 
 function requireHTTPS(req: any, res: any, next: any) {
     // The 'x-forwarded-proto' check is for Heroku
-    if (!req.secure && req.get('x-forwarded-proto') !== 'https' && !IS_DEVELOPMENT) {
+    if (!req.secure && req.get('x-forwarded-proto') !== 'https') {
         console.log("redirecting to https: " + req.url);
         return res.redirect('https://' + req.get('host') + req.url);
     }
@@ -76,7 +72,7 @@ app.get('/signout', (req: any, res: any) => {
 
 app.get('/', (req: any, res: any) => {
     if (req.session.token) {
-        console.log("valid token");
+        //console.log("valid token");
         //res.cookie('token', req.session.token);
         //res.json({
         //   status: 'session cookie set'
@@ -94,7 +90,17 @@ app.get('/', (req: any, res: any) => {
     });
 })
 
-console.log(process.env.NODE_ENV);
+// create a simple HTTPS server for local use so it behaves similar to prod
+function getHttpsListener(): number {
+    if (!IS_DEVELOPMENT) { throw Error("starting prod environment with dummy certs") }
 
-app.listen(port, () => console.log(`Example app listening on port ${port}!`))
+    const dummyKey = fs.readFileSync('./dummy/key.pem');
+    const dummyCert = fs.readFileSync('./dummy/cert.pem');
+    return https.createServer({key: dummyKey, cert: dummyCert }, app);
+}
+
+const listener = IS_DEVELOPMENT ? 
+    getHttpsListener() :
+    app;
+listener.listen(port, () => console.log(`Example app listening on port ${port}!`))
 
