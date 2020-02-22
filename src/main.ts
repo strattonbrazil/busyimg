@@ -5,7 +5,6 @@ const passport = require('passport')
 const cookieParser = require('cookie-parser')
 const cookieSession = require('cookie-session')
 const fs = require("fs")
-const httpProxy = require('http-proxy')
 
 if (!process.env.GOOGLE_CLIENT_ID || !process.env.GOOGLE_CLIENT_SECRET) {
     console.error("no Google auth envs located");
@@ -108,6 +107,8 @@ function startBusyImg(port: number) {
 if (IS_DEVELOPMENT) {
     const proxiedPort = 9090; // don't hit this directly
     startBusyImg(proxiedPort);
+
+    const httpProxy = require('http-proxy')
 
     httpProxy.createServer({
         target: {
