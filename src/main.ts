@@ -1,6 +1,7 @@
 import { registerPassport } from "./auth"
 
 const express = require('express')
+const exphbs  = require('express-handlebars');
 const passport = require('passport')
 const cookieParser = require('cookie-parser')
 const cookieSession = require('cookie-session')
@@ -37,7 +38,8 @@ function getExternalPort(): number {
 }
 const EXTERNAL_PORT = getExternalPort();
 
-app.set('view engine', 'ejs');
+app.engine('handlebars', exphbs());
+app.set('view engine', 'handlebars');
 
 function requireHTTPS(req: any, res: any, next: any) {
     // The 'x-forwarded-proto' check is for Heroku proxy
@@ -79,6 +81,16 @@ app.get('/signout', (req: any, res: any) => {
     res.redirect('/');
 })
 
+function isLoggedIn(req: any): boolean {
+    return !!req.session.token;
+}
+
+app.get('/upload', (req: any, res: any) => {
+    res.render("upload", {
+        "logged_in" : isLoggedIn(req)
+    })
+})
+
 app.get('/', (req: any, res: any) => {
     if (req.session.token) {
         //console.log("valid token");
@@ -94,8 +106,8 @@ app.get('/', (req: any, res: any) => {
         //});
     }
 
-    res.render('pages/index', {
-        "logged_in" : !!req.session.token
+    res.render("home", {
+        "logged_in" : isLoggedIn(req)
     });
 })
 

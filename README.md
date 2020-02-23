@@ -11,5 +11,5 @@ Get the Google credentials [here](https://console.developers.google.com/apis/cre
 export GOOGLE_CLIENT_ID="..."
 export GOOGLE_CLIENT_SECRET="..."
 export NODE_ENV=development
-npm run start
+heroku local
 ```

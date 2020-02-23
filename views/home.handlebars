@@ -1,0 +1,34 @@
+    <div class="cover-container d-flex w-100 h-100 p-3 mx-auto flex-column">
+        <header class="masthead mb-auto">
+            <div class="inner">
+            <h3 class="masthead-brand">BusyImg</h3>
+            <nav class="nav nav-masthead justify-content-center">
+                {{#if logged_in}}
+                    <a class="nav-link" href="/upload"></a>
+                    <a class="nav-link" href="/signout">Logout</a> 
+                {{else}}
+                    <a class="nav-link" href="/auth/google">Login to Upload an Image</a> 
+                {{/if}}
+                <!--
+                    <a href="#" onclick="signOut();">Sign out</a>
+<script>
+  function signOut() {
+    var auth2 = gapi.auth2.getAuthInstance();
+    auth2.signOut().then(function () {
+      console.log('User signed out.');
+    });
+  }
+</script>
+                -->
+                <!-- <div class="g-signin2" data-onsuccess="onSignIn"></div> -->
+            </nav>
+            </div>
+        </header>
+        
+        <main role="main" class="inner cover">
+            <h1 class="cover-heading">Cover your page.</h1>
+            <p class="lead">Cover is a one-page template for building simple and beautiful home pages. Download, edit the text, and add your own fullscreen background photo to make it your own.</p>
+            <p class="lead">
+            <a href="#" class="btn btn-lg btn-secondary">Learn more</a>
+            </p>
+        </main>
