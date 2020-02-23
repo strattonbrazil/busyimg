@@ -33,7 +33,7 @@ function getExternalPort(): number {
     } else if (process.argv[2]) {
         return parseInt(process.argv[2], 10);
     } else {
-        return 8080;
+        return 5000;
     }
 }
 const EXTERNAL_PORT = getExternalPort();
@@ -112,7 +112,7 @@ app.get('/', (req: any, res: any) => {
 })
 
 function startBusyImg(port: number) {
-    app.listen(port, () => console.log(`Starting busyimg on port ${port}!`));
+    app.listen(port, () => console.log(`Starting busyimg!`));
 }
 
 // run local server through HTTPS proxy so it behaves similarly to Heroku environment
