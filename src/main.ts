@@ -1,7 +1,7 @@
 import { registerPassport } from "./auth"
 
+const expressNunjucks = require('express-nunjucks');
 const express = require('express')
-const exphbs  = require('express-handlebars');
 const passport = require('passport')
 const cookieParser = require('cookie-parser')
 const cookieSession = require('cookie-session')
@@ -38,8 +38,10 @@ function getExternalPort(): number {
 }
 const EXTERNAL_PORT = getExternalPort();
 
-app.engine('handlebars', exphbs());
-app.set('view engine', 'handlebars');
+const njk = expressNunjucks(app, {
+    watch: IS_DEVELOPMENT,
+    noCache: IS_DEVELOPMENT
+});
 
 function requireHTTPS(req: any, res: any, next: any) {
     // The 'x-forwarded-proto' check is for Heroku proxy
