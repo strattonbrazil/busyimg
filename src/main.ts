@@ -6,6 +6,7 @@ const passport = require('passport')
 const cookieParser = require('cookie-parser')
 const cookieSession = require('cookie-session')
 const fs = require("fs")
+const multer = require("multer")
 
 if (!process.env.GOOGLE_CLIENT_ID || !process.env.GOOGLE_CLIENT_SECRET) {
     console.error("no Google auth envs located");
@@ -77,6 +78,25 @@ app.get('/auth/google/callback',
         res.redirect('/');
     }
 );
+
+var storage = multer.memoryStorage();
+var uploadMem = multer({ 
+    storage: storage,
+    limits: {
+        "fileSize" : 10 // bytes
+    }
+});
+
+app.post('/api/upload', uploadMem.single("image"), (req: any, res: any) => {
+    if (!isLoggedIn(req)) {
+        res.status(403).send('Invalid user credentials')
+    } else {
+        console.log(req.file);
+        fs.writeFileSync('/tmp/foo/'+req.file.originalname , req.file.buffer)
+        console.log(" file mem  uploaded");
+        res.send("file mem upload success");
+    }
+})
 
 app.get('/signout', (req: any, res: any) => {
     req.session.token = null;

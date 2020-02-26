@@ -29,8 +29,29 @@
 {% block postscript %}
     <script>
         $(".custom-file-input").on("change", function() {
-            var fileName = $(this).val().split("\\").pop();
+            const fileName = $(this).val().split("\\").pop();
+
             $(this).siblings(".custom-file-label").addClass("selected").html(fileName);
+
+            const formData = new FormData();
+            if ($(this).prop('files').length > 0) {
+                const file = $(this).prop('files')[0];
+                formData.append("image", file);
+
+                $.ajax({
+                    url: "/api/upload",
+                    type: "POST",
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    success: function (result) {
+                        console.log("uploaded!");
+                    },
+                    error: function(jqXHR, textStatus, errorThrown) {
+                        alert("Unable to upload image: " + errorThrown);
+                    }
+                });
+            }
         });
     </script>
 {% endblock %}
