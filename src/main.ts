@@ -83,18 +83,31 @@ var storage = multer.memoryStorage();
 var uploadMem = multer({ 
     storage: storage,
     limits: {
-        "fileSize" : 10 // bytes
+        "fileSize" : 100000 // bytes
     }
 });
+const upload = uploadMem.single("image");
 
-app.post('/api/upload', uploadMem.single("image"), (req: any, res: any) => {
+app.post('/api/upload', (req: any, res: any) => {
     if (!isLoggedIn(req)) {
         res.status(403).send('Invalid user credentials')
     } else {
-        console.log(req.file);
-        fs.writeFileSync('/tmp/foo/'+req.file.originalname , req.file.buffer)
-        console.log(" file mem  uploaded");
-        res.send("file mem upload success");
+        upload(req, res, function (err: any) {
+            console.log("processing upload")
+            if (err instanceof multer.MulterError) {
+                console.log("multer error on upload");
+                res.status(400).send(err.message);
+                // A Multer error occurred when uploading.
+            } else if (err) {
+                console.log("unknown error on upload");
+                res.status(400).send("unknown error");
+                // An unknown error occurred when uploading.
+            } else {
+                fs.writeFileSync('/tmp/foo/'+req.file.originalname, req.file.buffer)
+                console.log(" file mem  uploaded: " + req.file.originalname);
+                res.send("file mem upload success");
+            }
+        });
     }
 })
 

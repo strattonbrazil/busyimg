@@ -48,7 +48,8 @@
                         console.log("uploaded!");
                     },
                     error: function(jqXHR, textStatus, errorThrown) {
-                        alert("Unable to upload image: " + errorThrown);
+                        const errorReason = jqXHR.responseText ? jqXHR.responseText : errorThrown;
+                        alert("Unable to upload image: " + errorReason);
                     }
                 });
             }
