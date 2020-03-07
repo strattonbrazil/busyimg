@@ -1,0 +1,14 @@
+{% extends "templates/basic.html" %}
+
+{% block navigation %}
+{% endblock %}
+
+{% block contents %}
+    <h1 class="cover-heading">Misc. Info</h1>
+    <p class="lead">Env variables</p>
+    <p class="lead">
+        <p>Connected to database? <span>{{ "yes" if db_connected else "no" }}</span></p>
+    <a href="#" class="btn btn-lg btn-secondary">Learn more</a>
+    </p>
+{% endblock %}
+              

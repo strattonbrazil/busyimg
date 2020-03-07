@@ -1,4 +1,4 @@
-import { registerPassport } from "./auth"
+import { registerPassport, setUserSession, clearUserSession, isLoggedIn, isUser } from "./auth"
 
 const expressNunjucks = require('express-nunjucks');
 const express = require('express')
@@ -7,21 +7,37 @@ const cookieParser = require('cookie-parser')
 const cookieSession = require('cookie-session')
 const fs = require("fs")
 const multer = require("multer")
-
-if (!process.env.GOOGLE_CLIENT_ID || !process.env.GOOGLE_CLIENT_SECRET) {
-    console.error("no Google auth envs located");
-    process.exit(1);
-}
-
-const app = express()
+const { Sequelize } = require('sequelize');
 
 const IS_DEVELOPMENT: boolean = process.env.NODE_ENV === "development";
 
 if (IS_DEVELOPMENT) {
     console.log("starting app in development mode");
+    if (!process.env.DATABASE_URL) {
+        console.log("defaulting to sqlite in-memory database");
+        process.env.DATABASE_URL = "sqlite::memory:";
+    }
 } else { 
     console.log("starting app in production mode");
 }
+
+const REQUIRED_ENVS = [
+    "GOOGLE_CLIENT_ID",
+    "GOOGLE_CLIENT_SECRET",
+    "DATABASE_URL"
+];
+
+for (let key of REQUIRED_ENVS) {
+    if (!process.env[key]) {
+        console.error("missing required env: " + key);
+        process.exit(1);
+    }
+}
+
+const app = express()
+
+console.log("starting database: " + process.env.DATABASE_URL);
+const sequelize = new Sequelize(process.env.DATABASE_URL);
 
 registerPassport(passport, "/auth/google/callback");
 
@@ -65,16 +81,23 @@ app.use(cookieSession({
 app.use(cookieParser());
 
 app.get('/auth/google', passport.authenticate('google', {
-    scope: ['https://www.googleapis.com/auth/userinfo.profile']
+    scope: [
+        'https://www.googleapis.com/auth/userinfo.profile',
+        'https://www.googleapis.com/auth/userinfo.email'
+    ]
 }));
+
 
 app.get('/auth/google/callback',
     passport.authenticate('google', {
         failureRedirect: '/'
     }),
     (req: any, res: any) => {
-        console.log(JSON.stringify(req.user));
-        req.session.token = req.user.token;
+        setUserSession(req, {
+            token: req.user.token,
+            email: req.user.profile.emails[0].value,
+            provider: "google"
+        })
         res.redirect('/');
     }
 );
@@ -112,13 +135,9 @@ app.post('/api/upload', (req: any, res: any) => {
 })
 
 app.get('/signout', (req: any, res: any) => {
-    req.session.token = null;
+    clearUserSession(req);
     res.redirect('/');
 })
-
-function isLoggedIn(req: any): boolean {
-    return !!req.session.token;
-}
 
 app.get('/upload', (req: any, res: any) => {
     res.render("upload", {
@@ -127,24 +146,30 @@ app.get('/upload', (req: any, res: any) => {
 })
 
 app.get('/', (req: any, res: any) => {
-    if (req.session.token) {
-        //console.log("valid token");
-        //res.cookie('token', req.session.token);
-        //res.json({
-        //   status: 'session cookie set'
-        //});
-    } else {
-        //console.log("no valid token");
-        //res.cookie('token', '')
-        //res.json({
-        //    status: 'session cookie not set'
-        //});
-    }
-
     res.render("home", {
         "logged_in" : isLoggedIn(req)
     });
 })
+
+app.get('/busyadmin', async (req: any, res: any, next: Function) => {
+    if (isUser(req, "google", "strattonbrazil@gmail.com")) {
+        const isDbConnected = async (): Promise<boolean> => {
+            try {
+                await sequelize.authenticate();
+                return true;
+            } catch (error) {
+                return false;
+            }
+        }
+
+        res.render("admin", {
+            "db_connected" : isDbConnected()
+        });
+    } else { // pretend this resource doesn't exist
+        console.log("user doesn't exist");
+        next();
+    }
+});
 
 function startBusyImg(port: number) {
     app.listen(port, () => console.log(`Starting busyimg!`));

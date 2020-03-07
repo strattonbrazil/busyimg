@@ -20,3 +20,29 @@ export function registerPassport(passport: any, callbackURL: string) {
             });
         }));
 };
+
+export interface UserSessionData {
+    token: string;
+    email: string;
+    provider: string;
+}
+
+export function setUserSession(req: any, userData: UserSessionData) {
+    req.session.userData = userData;
+}
+
+export function clearUserSession(req: any) {
+    req.session = null;
+}
+
+export function isUser(req: any, provider: string, email: string): boolean {
+    console.log(req.session.userData);
+    return isLoggedIn(req) && 
+    req.session.userData.provider == provider && 
+    req.session.userData.email == email;
+}
+
+export function isLoggedIn(req: any): boolean {
+    return !!req.session.userData;
+}
+
