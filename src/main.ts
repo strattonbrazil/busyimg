@@ -1,4 +1,5 @@
 import { registerPassport, setUserSession, clearUserSession, isLoggedIn, isUser } from "./auth"
+import { isDatabaseConnected, initDatabase, User, BusyImage } from "./database";
 
 const expressNunjucks = require('express-nunjucks');
 const express = require('express')
@@ -37,7 +38,7 @@ for (let key of REQUIRED_ENVS) {
 const app = express()
 
 console.log("starting database: " + process.env.DATABASE_URL);
-const sequelize = new Sequelize(process.env.DATABASE_URL);
+initDatabase(process.env.DATABASE_URL);
 
 registerPassport(passport, "/auth/google/callback");
 
@@ -93,11 +94,24 @@ app.get('/auth/google/callback',
         failureRedirect: '/'
     }),
     (req: any, res: any) => {
+        const email = req.user.profile.emails[0].value;
         setUserSession(req, {
             token: req.user.token,
-            email: req.user.profile.emails[0].value,
+            email: email,
             provider: "google"
         })
+
+        // save user in database
+        User.findOrCreate({
+            where: {
+                reference: "google:" + email
+            }
+        }).then(([user, created]: any) => {
+            console.log(user.get({
+                plain: true
+            }))
+            console.log(created);
+        });
         res.redirect('/');
     }
 );
@@ -153,17 +167,8 @@ app.get('/', (req: any, res: any) => {
 
 app.get('/busyadmin', async (req: any, res: any, next: Function) => {
     if (isUser(req, "google", "strattonbrazil@gmail.com")) {
-        const isDbConnected = async (): Promise<boolean> => {
-            try {
-                await sequelize.authenticate();
-                return true;
-            } catch (error) {
-                return false;
-            }
-        }
-
         res.render("admin", {
-            "db_connected" : isDbConnected()
+            "db_connected" : isDatabaseConnected()
         });
     } else { // pretend this resource doesn't exist
         console.log("user doesn't exist");
