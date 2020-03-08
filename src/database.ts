@@ -27,7 +27,9 @@ export function initDatabase(url: string | undefined)
         misc: DataTypes.JSON // nasty RAW JSON thing
     }, { sequelize: db, modelName: 'image' });
 
-    db.sync();
+    db.sync({
+        alter: true
+    });
 }
 
 export async function isDatabaseConnected(): Promise<boolean> {

@@ -15,8 +15,10 @@ const IS_DEVELOPMENT: boolean = process.env.NODE_ENV === "development";
 if (IS_DEVELOPMENT) {
     console.log("starting app in development mode");
     if (!process.env.DATABASE_URL) {
+        //process.env.DATABASE_URL = "sqlite::memory:";
+        process.env.DATABASE_URL = "sqlite:/tmp/busyimg.sqlite";
         console.log("defaulting to sqlite in-memory database");
-        process.env.DATABASE_URL = "sqlite::memory:";
+        
     }
 } else { 
     console.log("starting app in production mode");
