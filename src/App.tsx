@@ -6,9 +6,9 @@ import MetadataStore from './MetadataStore';
 function App() {
   const ms = new MetadataStore();
   
-  const imageLinks = ms.metadata.map((index) => {
+  const imageLinks = ms.metadata.map((imgMetadata, index) => {
     return (
-      <a href="">img ref</a>
+      <a href="#">{ imgMetadata.title }</a>
     )
   });
 
@@ -28,6 +28,10 @@ function App() {
           Learn React
         </a>
       </header>
+
+      <>
+        { imageLinks }
+      </>
     </div>
   );
 }

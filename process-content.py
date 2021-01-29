@@ -23,6 +23,16 @@ if not os.path.isfile(metadataPath):
 def hyphensToCamelcase(s):
     return "".join(map(lambda p: p.capitalize(), s.strip(os.path.sep).split("-")))
 
+def areasToTypescript(areas):
+    typescript = "[\n"
+    areaLines = []
+    for area in areas:
+        areaLines.append("        { name: \"%s\", shape: \"%s\", coords: \"%s\" }" % (area["name"], area["shape"], area["coords"]))
+    typescript += ",\n".join(areaLines)
+
+    typescript += "\n    ]\n"
+    return typescript
+
 with open(metadataPath) as f:
     metadata = json.load(f)
 
@@ -46,8 +56,6 @@ with open(metadataPath) as f:
                         "shape" : child.attrib["shape"],
                         "coords" : child.attrib["coords"]
                     })
-                    print(child.tag)
-                    print(child.attrib)
                 
     print(areas)
 
@@ -59,8 +67,8 @@ export default {
     "creator": "%s",
     "creatorLink": "%s",
     "areas": %s
-} as Metadata;
-""" % (metadata["title"], metadata["creator"], metadata["creator-link"], json.dumps(areas))
+};
+""" % (metadata["title"], metadata["creator"], metadata["creator-link"], areasToTypescript(areas))
 
     print(typescript)
 
