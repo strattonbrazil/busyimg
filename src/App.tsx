@@ -42,7 +42,17 @@ interface BusyImageProps
 
 const BusyImage = (props: BusyImageProps) => {
   const imgUrl = `/static/images/${props.metadata.subpath}.jpg`
-  return <img src={imgUrl} />
+
+  const areas = props.metadata.areas.map((area, index) => {
+    return <area key={index} shape={area.shape} coords={area.coords} alt={area.name} href="#"></area>
+  })
+
+  return <>
+    <img src={imgUrl} useMap="#partmap" />
+    <map name="partmap">
+      { areas }
+    </map>
+  </>
 }
 
 const ImagePage = () => {
