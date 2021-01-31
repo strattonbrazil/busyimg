@@ -1,8 +1,9 @@
 
-import Metadata from '../../src/Metadata'
+import Metadata from '../Metadata'
 
 export default {
     "title": "figure out title",
+    "subpath": "many-game-characters",
     "creator": "some artist",
     "creatorLink": "http://www.yahoo.com",
     "areas": [
