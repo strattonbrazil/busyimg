@@ -6,7 +6,7 @@ Contributed images should merit annotations to help understand its many parts. I
 
 ### 1. Create the content directory
 
-Create a new directory under `PROJECT_BASE\pregen` that will hold the image and metadata. The name of the directory will not be visible to users, but should reflect some relation to the content. The directory name should be lowercase and words should be hyphen-delimited. 
+Create a new directory under `PROJECT_BASE/pregen` that will hold the image and metadata. The name of the directory will not be visible to users, but should reflect some relation to the content. The directory name should be lowercase and words should be hyphen-delimited. 
 
 For example:
 ```
@@ -15,12 +15,12 @@ mkdir pregen/lots-of-people-to-see
 
 ### 2. Create the metadata file
 
-Create a file called `metadata.json` in the content directory (from example above `PROJECT_PAGE\pregen\lots-of-people-to-see\metadata.json`). The metadata file must include three keys:
+Create a file called `metadata.json` in the content directory (from example above `PROJECT_PAGE/pregen/lots-of-people-to-see/metadata.json`). The metadata file must include three keys:
 * _title_ - the viewer-visible name of the artwork/page
 * _creator_ - the name of creator (ie. artist, photographer, illustrator, etc.)
 * _creatorLink_ - ideally the url of the creator's page containing this work; otherwise, the most relevant link referencing the artist falling back on where the original image was located
 
-For example (`pregen/lots-of-people-to-see\metadata.json`):
+For example (`pregen/lots-of-people-to-see/metadata.json`):
 ```
 {
     "title": "50 Famous Scientists Fighting to the Death",
@@ -31,9 +31,9 @@ For example (`pregen/lots-of-people-to-see\metadata.json`):
 
 ### 3. Add the source image
 
-Copy the source image into the directory. The name of the source image must be `content.jpg`. The image must by a JPEG file and be a maximum of 1920x1080 in size. 
+Copy the source image into the `public/static/images` directory. The name of the source image basename must be the same as the pregen directory. The image must by a JPEG file and be a maximum of 1920x1080 in size. 
 
-For example: `pregen/lots-of-people-to-see\content.jpg`
+Using the example above, this would be:: `public/static/images/lots-of-people-to-see.jpg`
 
 ### 4. Add the _area_-tag files
 

@@ -41,7 +41,8 @@ interface BusyImageProps
 }
 
 const BusyImage = (props: BusyImageProps) => {
-  return <>img</>
+  const imgUrl = `/static/images/${props.metadata.subpath}.jpg`
+  return <img src={imgUrl} />
 }
 
 const ImagePage = () => {
