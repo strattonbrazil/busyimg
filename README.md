@@ -90,6 +90,22 @@ export default class MetadataStore {
     }
 };
 ```
+
+### 6. Test & Submit
+Run `yarn develop` to spin up the test server and validate the image is loading correctly and its annotations are rendered properly. 
+
+If so, submit a pull request against the *main* branch. 
+
+# Updating Images
+To add or improve annotations use a flow similar to the one above:
+
+* make any improvements to the metadata file
+* make any improvements to existing *areas* files
+* add any new *areas* files
+* run the `process-content.py` script
+* test changes
+* submit pull request
+
 # Development
 
 ## Available Scripts
