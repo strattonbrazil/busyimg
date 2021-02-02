@@ -9,11 +9,27 @@ import {
 } from "react-router-dom";
 
 import MetadataStore from './MetadataStore';
-import React, { CSSProperties, useMemo, useState } from 'react';
+import React, { CSSProperties, useEffect, useMemo, useState } from 'react';
 import Metadata from './Metadata';
 import Area from './Area';
 
 const ms = new MetadataStore();
+
+const useMousePosition = () => {
+  const [mousePosition, setMousePosition] = useState({ mouseX: 0, mouseY: 0 });
+
+  const updateMousePosition = (ev:MouseEvent) => {
+    setMousePosition({ mouseX: ev.clientX, mouseY: ev.clientY });
+  };
+
+  useEffect(() => {
+    window.addEventListener("mousemove", updateMousePosition);
+
+    return () => window.removeEventListener("mousemove", updateMousePosition);
+  }, []);
+
+  return mousePosition;
+};
 
 const subpathToMetadata: { [key: string]: Metadata } = {};
 ms.metadata.forEach(element => {
@@ -41,33 +57,25 @@ interface BusyImageProps
   metadata: Metadata;
 }
 
-const createAreaMapping = (areas: Area[]) => {
-  const indexToArea: { [name: string]: boolean } = {};
+const createPartMapping = (areas: Area[]) => {
+  let mapping: Record<string, Area[]> = {};
   areas.forEach((area, index) => {
-    indexToArea[index] = false;
+    if (mapping[area.name] === undefined) {
+      mapping[area.name] = [];
+    }
+    mapping[area.name].push(area);
   });
-  return indexToArea;
-}
+  return mapping;
+};
 
 const BusyImage = (props: BusyImageProps) => {
   const imgUrl = `/static/images/${props.metadata.subpath}.jpg`
 
-  const areas = props.metadata.areas.map((area, index) => {
-    return <area key={index} shape={area.shape} coords={area.coords} alt={area.name} href="#"></area>
-  });
-
-  //let [areasVisible, setAreasVisible] = useState(createAreaMapping(props.metadata.areas));
-
-  const partNames: Record<string, Area[]> = useMemo(() => {
-    let mapping: Record<string, Area[]> = {};
-    props.metadata.areas.forEach((area, index) => {
-      if (mapping[area.name] === undefined) {
-        mapping[area.name] = [];
-      }
-      mapping[area.name].push(area);
-    });
-    return mapping;
-  }, [props.metadata.areas]);
+  let [partNames, setPartNames] = useState(() => createPartMapping(props.metadata.areas));
+  let [hoveredPartName, setHoveredPartName] = useState<string>();
+  let [hoveredLabelX, setHoveredLabelX] = useState(0);
+  let [hoveredLabelY, setHoveredLabelY] = useState(0);
+  const { mouseX, mouseY } = useMousePosition();
 
   let svgs: JSX.Element[] = [];
   Object.keys(partNames).map((partName, partIndex) => {
@@ -80,17 +88,48 @@ const BusyImage = (props: BusyImageProps) => {
       const left = Math.min(parseInt(x1, 10), parseInt(x2, 10));
       const top = Math.min(parseInt(y1, 10), parseInt(y2, 10))
 
+      let fillColor = "rgb(255,255,0,0.4)";
+      if (partName === hoveredPartName) {
+        fillColor = "rgb(255,255,0,0.8)";
+      }
+
       const rectStyle = {
-        fill: "rgb(255,255,0,0.4)",
+        fill: fillColor,
         strokeWidth: "4",
-        stroke: "rgb(0,0,0)"
+        stroke: "rgb(0,0,0)",
+        pointerEvents: "painted"
+      } as React.CSSProperties;
+
+      const onHoverCallback = (ev: React.MouseEvent<SVGRectElement, MouseEvent>) => {
+        setPartNames(prevState => {
+          let newState = {...prevState}; // shallow copy
+
+          setHoveredPartName(partName);
+
+
+          setHoveredLabelX(ev.clientX);
+          setHoveredLabelY(ev.clientY);
+
+          return newState;
+        });
       };
 
-      return <rect key={areaPartIndex} x={left} y={top} width={width} height={height} style={rectStyle} onMouseEnter={() => console.log("enter") } />
+      const onLeaveCallback = () => {
+        setPartNames(prevState => {
+          let newState = {...prevState}; // shallow copy
+
+          setHoveredPartName("");
+
+          return newState;
+        });
+      };
+
+      return <rect key={areaPartIndex} x={left} y={top} width={width} height={height} style={rectStyle} onMouseEnter={onHoverCallback} onMouseLeave={onLeaveCallback} />
     });
 
     const svgStyle = {
       position: "absolute",
+      pointerEvents: "none"
     } as React.CSSProperties;
 
     const svgWidth = 1920;
@@ -100,14 +139,27 @@ const BusyImage = (props: BusyImageProps) => {
     </svg>);
   });
 
+  const labelStyle = {
+    position: "absolute",
+    left: hoveredLabelX,
+    top: hoveredLabelY,
+    color: "white",
+    textShadow: "1px 1px black"
+  } as React.CSSProperties;
+  let partLabel = (
+    hoveredPartName !== null && (
+      <div style={labelStyle}>{ hoveredPartName }</div>
+    )
+  );
+
   return <div>
     <img src={imgUrl} useMap="#partmap" style={{ position: "absolute" }}/>
-    <map name="partmap">
-      { areas }
-    </map>
     <div style={{ position: "absolute" }}>
       { svgs }
     </div>
+    {
+      partLabel
+    }
   </div>
 }
 
