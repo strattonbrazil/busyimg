@@ -27,13 +27,13 @@ interface ImageParam
 
 const ImageList = () => {
   const imageLinks = ms.metadata.map((imgMetadata, index) => {
-    return <ul>
-      <li><Link key={index} to={ "/i/" + imgMetadata.subpath }>{ imgMetadata.title }</Link> by <a href={imgMetadata.creatorLink}>{imgMetadata.creator}</a></li>
-    </ul>
+    return (
+      <li key={index}><Link to={ "/i/" + imgMetadata.subpath }>{ imgMetadata.title }</Link> by <a href={imgMetadata.creatorLink}>{imgMetadata.creator}</a></li>
+    );
   });
-  return (
-    <>{ imageLinks }</>
-  )
+  return <ul>
+    { imageLinks }
+    </ul>;
 }
 
 interface BusyImageProps
