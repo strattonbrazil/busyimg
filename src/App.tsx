@@ -27,9 +27,9 @@ interface ImageParam
 
 const ImageList = () => {
   const imageLinks = ms.metadata.map((imgMetadata, index) => {
-    return (
-      <Link key={index} to={ "/i/" + imgMetadata.subpath }>{ imgMetadata.title }</Link>
-    )
+    return <ul>
+      <li><Link key={index} to={ "/i/" + imgMetadata.subpath }>{ imgMetadata.title }</Link> by <a href={imgMetadata.creatorLink}>{imgMetadata.creator}</a></li>
+    </ul>
   });
   return (
     <>{ imageLinks }</>
