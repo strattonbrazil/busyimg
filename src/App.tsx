@@ -9,27 +9,11 @@ import {
 } from "react-router-dom";
 
 import MetadataStore from './MetadataStore';
-import React, { CSSProperties, useEffect, useMemo, useState } from 'react';
+import React, { CSSProperties, useCallback, useEffect, useMemo, useState } from 'react';
 import Metadata from './Metadata';
 import Area from './Area';
 
 const ms = new MetadataStore();
-
-const useMousePosition = () => {
-  const [mousePosition, setMousePosition] = useState({ mouseX: 0, mouseY: 0 });
-
-  const updateMousePosition = (ev:MouseEvent) => {
-    setMousePosition({ mouseX: ev.clientX, mouseY: ev.clientY });
-  };
-
-  useEffect(() => {
-    window.addEventListener("mousemove", updateMousePosition);
-
-    return () => window.removeEventListener("mousemove", updateMousePosition);
-  }, []);
-
-  return mousePosition;
-};
 
 const subpathToMetadata: { [key: string]: Metadata } = {};
 ms.metadata.forEach(element => {
@@ -75,7 +59,16 @@ const BusyImage = (props: BusyImageProps) => {
   let [hoveredPartName, setHoveredPartName] = useState<string>();
   let [hoveredLabelX, setHoveredLabelX] = useState(0);
   let [hoveredLabelY, setHoveredLabelY] = useState(0);
-  const { mouseX, mouseY } = useMousePosition();
+  
+  const imgContainer = React.createRef();
+
+  const mouseMovedCallback = useCallback((ev: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+    const rect = ev.currentTarget.getBoundingClientRect();
+
+    // set the label position relative to the BusyImg
+    setHoveredLabelX(ev.clientX - rect.x + 10);
+    setHoveredLabelY(ev.clientY - rect.y + 10);
+  }, []);
 
   let svgs: JSX.Element[] = [];
   Object.keys(partNames).map((partName, partIndex) => {
@@ -105,10 +98,6 @@ const BusyImage = (props: BusyImageProps) => {
           let newState = {...prevState}; // shallow copy
 
           setHoveredPartName(partName);
-
-
-          setHoveredLabelX(ev.clientX);
-          setHoveredLabelY(ev.clientY);
 
           return newState;
         });
@@ -144,7 +133,8 @@ const BusyImage = (props: BusyImageProps) => {
     left: hoveredLabelX,
     top: hoveredLabelY,
     color: "white",
-    textShadow: "1px 1px black"
+    textShadow: "1px 1px black",
+    width: "8em"
   } as React.CSSProperties;
   let partLabel = (
     hoveredPartName !== null && (
@@ -152,14 +142,14 @@ const BusyImage = (props: BusyImageProps) => {
     )
   );
 
-  return <div>
+  return <div onMouseMove={ mouseMovedCallback }>
     <img src={imgUrl} useMap="#partmap" style={{ position: "absolute" }}/>
     <div style={{ position: "absolute" }}>
       { svgs }
+      {
+        partLabel
+      }
     </div>
-    {
-      partLabel
-    }
   </div>
 }
 
