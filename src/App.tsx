@@ -163,6 +163,7 @@ const ImagePage = () => {
       { metadata && (
         <>
           <h1>{ metadata.title }</h1>
+          <h3>by <a href={metadata.creatorLink}>{ metadata.creator }</a></h3>
           <BusyImage metadata={ metadata } />
         </>
       )}
