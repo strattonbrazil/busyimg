@@ -68,13 +68,15 @@ with open(metadataPath) as f:
     print(areas)
 
     typescript = """
+import Metadata from '../Metadata'
+
 export default {
     "title": "%s",
     "subpath": "%s",
     "creator": "%s",
     "creatorLink": "%s",
     "areas": %s
-};
+} as Metadata;
 """ % (metadata["title"], contentName, metadata["creator"], metadata["creator-link"], areasToTypescript(areas))
 
     print(typescript)
