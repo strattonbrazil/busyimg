@@ -1,15 +1,13 @@
-import logo from './logo.svg';
 import './App.css';
 import {
   BrowserRouter as Router,
-  Switch,
   Route,
   Link,
   useParams
 } from "react-router-dom";
 
 import MetadataStore from './MetadataStore';
-import React, { CSSProperties, useCallback, useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import Metadata from './Metadata';
 import Area from './Area';
 
@@ -60,8 +58,6 @@ const BusyImage = (props: BusyImageProps) => {
   let [hoveredLabelX, setHoveredLabelX] = useState(0);
   let [hoveredLabelY, setHoveredLabelY] = useState(0);
   
-  const imgContainer = React.createRef();
-
   const mouseMovedCallback = useCallback((ev: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     const rect = ev.currentTarget.getBoundingClientRect();
 
@@ -71,7 +67,7 @@ const BusyImage = (props: BusyImageProps) => {
   }, []);
 
   let svgs: JSX.Element[] = [];
-  Object.keys(partNames).map((partName, partIndex) => {
+  Object.keys(partNames).forEach((partName, partIndex) => {
     const partAreas: Area[] = partNames[partName];
 
     const svgChildren = partAreas.map((area, areaPartIndex) => {
@@ -143,7 +139,7 @@ const BusyImage = (props: BusyImageProps) => {
   );
 
   return <div onMouseMove={ mouseMovedCallback }>
-    <img src={imgUrl} useMap="#partmap" style={{ position: "absolute" }}/>
+    <img alt={props.metadata.title} src={imgUrl} useMap="#partmap" style={{ position: "absolute" }}/>
     <div style={{ position: "absolute" }}>
       { svgs }
       {
