@@ -68,8 +68,6 @@ with open(metadataPath) as f:
     print(areas)
 
     typescript = """
-import Metadata from '../Metadata'
-
 export default {
     "title": "%s",
     "subpath": "%s",
