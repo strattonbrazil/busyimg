@@ -69,11 +69,10 @@ const BusyImage = (props: BusyImageProps) => {
     setHoveredLabelY(ev.clientY - rect.y + 10);
   }, []);
 
-  let svgs: JSX.Element[] = [];
-  Object.keys(partNames).forEach((partName, partIndex) => {
+  const allSVGShapes: JSX.Element[] = Object.keys(partNames).map((partName, partIndex) => {
     const partAreas: Area[] = partNames[partName];
 
-    const svgChildren = partAreas.map((area, areaPartIndex) => {
+    const partSVGShapes = partAreas.map((area, areaPartIndex) => {
       const [ x1, y1, x2, y2 ] = area.coords.split(",");
       const width = Math.abs(parseInt(x2, 10) - parseInt(x1, 10));
       const height = Math.abs(parseInt(y2, 10) - parseInt(y1, 10));
@@ -115,19 +114,8 @@ const BusyImage = (props: BusyImageProps) => {
       return <rect key={areaPartIndex} x={left} y={top} width={width} height={height} style={rectStyle} onMouseEnter={onHoverCallback} onMouseLeave={onLeaveCallback} />
     });
 
-    const svgStyle = {
-      position: "absolute",
-      pointerEvents: "none",
-      overflowX: "hidden",
-      overflowY: "hidden"
-    } as React.CSSProperties;
-
-    const svgWidth = 1920;
-    const svgHeight = 1080;
-    svgs.push(<svg key={partIndex} width={svgWidth} height={svgHeight} style={svgStyle}>
-      { svgChildren }
-    </svg>);
-  });
+    return partSVGShapes;
+  }).flat(); // change array of array of SVG shapes to array of SVG shapes
 
   const labelStyle = {
     position: "absolute",
@@ -155,10 +143,21 @@ const BusyImage = (props: BusyImageProps) => {
     top: "0px"
   } as React.CSSProperties;
 
+  const svgStyle = {
+    position: "absolute",
+    width: "1920px",
+    height: "1080px",
+    pointerEvents: "none",
+    overflowX: "hidden",
+    overflowY: "hidden"
+  } as React.CSSProperties;
+
   return <div onMouseMove={ mouseMovedCallback } style={imgContainerStyle}>
     <img alt={props.metadata.title} src={imgUrl} useMap="#partmap" />
     <div style={overlayStyle}>
-      { svgs }
+    <svg style={svgStyle}>
+      { allSVGShapes }
+    </svg>
       {
         partLabel
       }
