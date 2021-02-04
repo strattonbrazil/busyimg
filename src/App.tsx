@@ -1,4 +1,4 @@
-import './App.css';
+import './App.scss';
 import {
   BrowserRouter as Router,
   Route,
@@ -10,6 +10,8 @@ import MetadataStore from './MetadataStore';
 import React, { useCallback, useState } from 'react';
 import Metadata from './Metadata';
 import Area from './Area';
+
+import { Container } from 'semantic-ui-react'
 
 const ms = new MetadataStore();
 
@@ -29,9 +31,10 @@ const ImageList = () => {
       <li key={index}><Link to={ "/i/" + imgMetadata.subpath }>{ imgMetadata.title }</Link> by <a href={imgMetadata.creatorLink}>{imgMetadata.creator}</a></li>
     );
   });
-  return <ul>
+  return <Container><ul>
     { imageLinks }
-    </ul>;
+    </ul>
+    </Container>;
 }
 
 interface BusyImageProps
@@ -62,7 +65,7 @@ const BusyImage = (props: BusyImageProps) => {
     const rect = ev.currentTarget.getBoundingClientRect();
 
     // set the label position relative to the BusyImg
-    setHoveredLabelX(ev.clientX - rect.x + 10);
+    setHoveredLabelX(ev.clientX - rect.x + ev.currentTarget.scrollLeft + 10);
     setHoveredLabelY(ev.clientY - rect.y + 10);
   }, []);
 
@@ -114,7 +117,9 @@ const BusyImage = (props: BusyImageProps) => {
 
     const svgStyle = {
       position: "absolute",
-      pointerEvents: "none"
+      pointerEvents: "none",
+      overflowX: "hidden",
+      overflowY: "hidden"
     } as React.CSSProperties;
 
     const svgWidth = 1920;
@@ -138,9 +143,21 @@ const BusyImage = (props: BusyImageProps) => {
     )
   );
 
-  return <div onMouseMove={ mouseMovedCallback }>
-    <img alt={props.metadata.title} src={imgUrl} useMap="#partmap" style={{ position: "absolute" }}/>
-    <div style={{ position: "absolute" }}>
+  const imgContainerStyle = {
+    position: "relative",
+    overflowX: "scroll", 
+    overflowY: "hidden"
+  } as React.CSSProperties;
+
+  const overlayStyle = {
+    position: "absolute",
+    left: "0px",
+    top: "0px"
+  } as React.CSSProperties;
+
+  return <div onMouseMove={ mouseMovedCallback } style={imgContainerStyle}>
+    <img alt={props.metadata.title} src={imgUrl} useMap="#partmap" />
+    <div style={overlayStyle}>
       { svgs }
       {
         partLabel
