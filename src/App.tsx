@@ -31,10 +31,7 @@ const ImageList = () => {
       <li key={index}><Link to={ "/i/" + imgMetadata.subpath }>{ imgMetadata.title }</Link> by <a href={imgMetadata.creatorLink}>{imgMetadata.creator}</a></li>
     );
   });
-  return <Container><ul>
-    { imageLinks }
-    </ul>
-    </Container>;
+  return <ul>{ imageLinks }</ul>;
 }
 
 interface BusyImageProps
@@ -174,16 +171,22 @@ const ImagePage = () => {
     <>
       { metadata && (
         <>
-          <h1>{ metadata.title }</h1>
-          <h3>by <a href={metadata.creatorLink}>{ metadata.creator }</a></h3>
+          <Container>
+            <h1>{ metadata.title }</h1>
+            <h3>by <a href={metadata.creatorLink}>{ metadata.creator }</a></h3>
+          </Container>
           <BusyImage metadata={ metadata } />
         </>
       )}
       { !metadata && (
-        <div>cannot find image</div>
+        <Container>
+          <div>cannot find image</div>
+        </Container>
       )}
 
-      <ImageList />
+      <Container>
+        <ImageList />
+      </Container>
     </>
   )
 };
@@ -191,8 +194,10 @@ const ImagePage = () => {
 const HomePage = () => {
   return (
     <div>
-      <h1>Home</h1>
-      <ImageList />
+      <Container>
+        <h1>Home</h1>
+        <ImageList />
+      </Container>
     </div>
   );
 };
