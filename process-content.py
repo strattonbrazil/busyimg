@@ -4,6 +4,7 @@ import os
 import json
 import io
 from lxml.html import soupparser
+from PIL import Image
 
 if len(sys.argv) != 2:
     print("usage: ./process-content.py pregen/<CONTENT_DIRECTORY>")
@@ -35,12 +36,21 @@ def areasToTypescript(areas):
 
 contentName = pregenContentPath.split("pregen" + os.path.sep)[-1].strip(os.path.sep)
 
-contentImgPath = "public/static/images/%s.jpg" % contentName
+imageDir = "public/static/images"
+contentImgPath = os.path.join(imageDir, "%s.jpg" % contentName)
+thumbnailImgPath = os.path.join(imageDir, "%s_thumbnail.jpg" % contentName)
 if not os.path.isfile(contentImgPath):
     print("error: %s content file does not exist" % contentImgPath)
     exit(1)
 
+# create the thumbnail
+im = Image.open(contentImgPath)
+im.thumbnail((300, 168))
+im.save(thumbnailImgPath, "JPEG")
+
 # TODO: add other image-checking errors like resolution and file size maximum
+
+
 
 with open(metadataPath) as f:
     metadata = json.load(f)
