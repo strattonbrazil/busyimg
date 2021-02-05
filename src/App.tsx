@@ -83,7 +83,7 @@ const areaToSVGShapeElement = (area: Area,
 const BusyImage = (props: BusyImageProps) => {
   const imgUrl = `/static/images/${props.metadata.subpath}.jpg`
 
-  let [partNames, setPartNames] = useState(() => createPartMapping(props.metadata.areas));
+  let [partNames] = useState(() => createPartMapping(props.metadata.areas));
   let [hoveredPartName, setHoveredPartName] = useState<string>();
   let [hoveredLabelX, setHoveredLabelX] = useState(0);
   let [hoveredLabelY, setHoveredLabelY] = useState(0);
@@ -114,7 +114,7 @@ const BusyImage = (props: BusyImageProps) => {
       return areaToSVGShapeElement(area, areaKey, isHovered, onHoverCallback, onLeaveCallback);
     });
 
-    return partSVGShapes;
+    return svgChildren;
   }).flat(); // change array of array of SVG shapes to array of SVG shapes
 
   const labelStyle = {
@@ -145,6 +145,8 @@ const BusyImage = (props: BusyImageProps) => {
 
   const svgStyle = {
     position: "absolute",
+    width: "1920px",
+    height: "1080px",
     pointerEvents: "none",
     overflowX: "hidden",
     overflowY: "hidden"
