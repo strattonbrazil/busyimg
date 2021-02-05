@@ -53,10 +53,37 @@ const createPartMapping = (areas: Area[]) => {
   return mapping;
 };
 
+const areaToSVGShapeElement = (area: Area, 
+    areaPartKey: string, 
+    isHovered: boolean, 
+    onHoverCallback: (ev: React.MouseEvent<SVGRectElement, MouseEvent>) => void, 
+    onLeaveCallback: (ev: React.MouseEvent<SVGRectElement, MouseEvent>) => void): JSX.Element => {
+
+  const [ x1, y1, x2, y2 ] = area.coords.split(",");
+  const width = Math.abs(parseInt(x2, 10) - parseInt(x1, 10));
+  const height = Math.abs(parseInt(y2, 10) - parseInt(y1, 10));
+  const left = Math.min(parseInt(x1, 10), parseInt(x2, 10));
+  const top = Math.min(parseInt(y1, 10), parseInt(y2, 10))
+
+  let fillColor = "rgb(255,255,0,0.4)";
+  if (isHovered) {
+    fillColor = "rgb(255,255,0,0.8)";
+  }
+
+  const rectStyle = {
+    fill: fillColor,
+    strokeWidth: "4",
+    stroke: "rgb(0,0,0)",
+    pointerEvents: "painted"
+  } as React.CSSProperties;
+
+  return <rect key={areaPartKey} x={left} y={top} width={width} height={height} style={rectStyle} onMouseEnter={onHoverCallback} onMouseLeave={onLeaveCallback} />
+};
+
 const BusyImage = (props: BusyImageProps) => {
   const imgUrl = `/static/images/${props.metadata.subpath}.jpg`
 
-  let [partNames, setPartNames] = useState(() => createPartMapping(props.metadata.areas));
+  let [partNames] = useState(() => createPartMapping(props.metadata.areas));
   let [hoveredPartName, setHoveredPartName] = useState<string>();
   let [hoveredLabelX, setHoveredLabelX] = useState(0);
   let [hoveredLabelY, setHoveredLabelY] = useState(0);
@@ -72,49 +99,22 @@ const BusyImage = (props: BusyImageProps) => {
   const allSVGShapes: JSX.Element[] = Object.keys(partNames).map((partName, partIndex) => {
     const partAreas: Area[] = partNames[partName];
 
-    const partSVGShapes = partAreas.map((area, areaPartIndex) => {
-      const [ x1, y1, x2, y2 ] = area.coords.split(",");
-      const width = Math.abs(parseInt(x2, 10) - parseInt(x1, 10));
-      const height = Math.abs(parseInt(y2, 10) - parseInt(y1, 10));
-      const left = Math.min(parseInt(x1, 10), parseInt(x2, 10));
-      const top = Math.min(parseInt(y1, 10), parseInt(y2, 10))
-
-      let fillColor = "rgb(255,255,0,0.4)";
-      if (partName === hoveredPartName) {
-        fillColor = "rgb(255,255,0,0.8)";
-      }
-
-      const rectStyle = {
-        fill: fillColor,
-        strokeWidth: "4",
-        stroke: "rgb(0,0,0)",
-        pointerEvents: "painted"
-      } as React.CSSProperties;
-
+    const svgChildren = partAreas.map((area, areaPartIndex) => {
+      const areaKey = partIndex + "::" + areaPartIndex;
       const onHoverCallback = (ev: React.MouseEvent<SVGRectElement, MouseEvent>) => {
-        setPartNames(prevState => {
-          let newState = {...prevState}; // shallow copy
-
-          setHoveredPartName(partName);
-
-          return newState;
-        });
+        setHoveredPartName(partName);
       };
 
       const onLeaveCallback = () => {
-        setPartNames(prevState => {
-          let newState = {...prevState}; // shallow copy
-
-          setHoveredPartName("");
-
-          return newState;
-        });
+        setHoveredPartName("");
       };
 
-      return <rect key={areaPartIndex} x={left} y={top} width={width} height={height} style={rectStyle} onMouseEnter={onHoverCallback} onMouseLeave={onLeaveCallback} />
+      const isHovered = (partName === hoveredPartName);
+    
+      return areaToSVGShapeElement(area, areaKey, isHovered, onHoverCallback, onLeaveCallback);
     });
 
-    return partSVGShapes;
+    return svgChildren;
   }).flat(); // change array of array of SVG shapes to array of SVG shapes
 
   const labelStyle = {
