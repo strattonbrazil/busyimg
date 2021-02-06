@@ -2,6 +2,15 @@
 var express = require('express');
 // Initialise Express
 var app = express();
+
+app.enable('trust proxy')
+app.use(function(request, response, next) {
+    if (process.env.NODE_ENV != 'development' && !request.secure) {
+       return response.redirect("https://" + request.headers.host + request.url) 
+    } 
+    next();
+});
+
 // Render static files
 app.use(express.static('build'));
 
