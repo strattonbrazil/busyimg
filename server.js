@@ -1,5 +1,8 @@
 // Load Node modules
 var express = require('express');
+
+var cors = require('cors');
+
 // Initialise Express
 var app = express();
 
@@ -10,6 +13,8 @@ app.use(function(request, response, next) {
     } 
     next();
 });
+
+app.use(cors());
 
 // Render static files
 app.use(express.static('build'));
