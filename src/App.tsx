@@ -6,7 +6,7 @@ import {
 } from "react-router-dom";
 
 import MetadataStore from './MetadataStore';
-import React, { useCallback, useState } from 'react';
+import React, { SyntheticEvent, useCallback, useState } from 'react';
 import Metadata from './Metadata';
 import Area from './Area';
 
@@ -115,6 +115,8 @@ const BusyImage = (props: BusyImageProps) => {
   let [hoveredPartName, setHoveredPartName] = useState<string>();
   let [hoveredLabelX, setHoveredLabelX] = useState(0);
   let [hoveredLabelY, setHoveredLabelY] = useState(0);
+  let [svgWidth, setSVGWidth] = useState("1920px");
+  let [svgHeight, setSVGHeight] = useState("1080px");
   
   const mouseMovedCallback = useCallback((ev: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     const rect = ev.currentTarget.getBoundingClientRect();
@@ -123,6 +125,11 @@ const BusyImage = (props: BusyImageProps) => {
     setHoveredLabelX(ev.clientX - rect.x + ev.currentTarget.scrollLeft + 10);
     setHoveredLabelY(ev.clientY - rect.y + 10);
   }, []);
+
+  const onImageLoad = (event: SyntheticEvent<HTMLImageElement,Event>) => {
+    setSVGWidth(event.currentTarget.width + "px");
+    setSVGHeight(event.currentTarget.height + "px");
+  };
 
   const allSVGShapes: JSX.Element[] = Object.keys(partNames).map((partName, partIndex) => {
     const partAreas: Area[] = partNames[partName];
@@ -173,15 +180,15 @@ const BusyImage = (props: BusyImageProps) => {
 
   const svgStyle = {
     position: "absolute",
-    width: "1920px",
-    height: "1080px",
+    width: svgWidth,
+    height: svgHeight,
     pointerEvents: "none",
     overflowX: "hidden",
     overflowY: "hidden"
   } as React.CSSProperties;
 
   return <div onMouseMove={ mouseMovedCallback } style={imgContainerStyle}>
-    <img alt={props.metadata.title} src={imgUrl} useMap="#partmap" />
+    <img alt={props.metadata.title} src={imgUrl} useMap="#partmap" onLoad={onImageLoad} />
     <div style={overlayStyle}>
     <svg style={svgStyle}>
       { allSVGShapes }
