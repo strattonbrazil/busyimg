@@ -64,7 +64,7 @@ const BusyImage = (props: BusyImageProps) => {
   const imgUrl = `/static/images/${props.metadata.subpath}.jpg`
 
   let [partNames] = useState(() => createPartMapping(props.metadata.areas));
-  let [hoveredPartName, setHoveredPartName] = useState<string>();
+  let [hoveredPartName, setHoveredPartName] = useState<string>("");
   let [hoveredLabelX, setHoveredLabelX] = useState(0);
   let [hoveredLabelY, setHoveredLabelY] = useState(0);
   let [svgWidth, setSVGWidth] = useState("1920px");
@@ -109,11 +109,15 @@ const BusyImage = (props: BusyImageProps) => {
     left: hoveredLabelX,
     top: hoveredLabelY,
     color: "white",
-    textShadow: "1px 1px black",
-    width: "8em"
+    fontSize: "2em",
+    textShadow: "2px 2px black",
+    width: "8em",
+    lineHeight: "1em",
+    background: "rgba(0,0,0,0.2)",
+    padding: "3px"
   } as React.CSSProperties;
   let partLabel = (
-    hoveredPartName !== null && (
+    hoveredPartName !== "" && (
       <div style={labelStyle}>{ hoveredPartName }</div>
     )
   );
