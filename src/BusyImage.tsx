@@ -25,17 +25,18 @@ const areaToSVGShapeElement = (area: Area,
     onHoverCallback: () => void, 
     onLeaveCallback: () => void): JSX.Element | null => {
 
-  let fillColor = "rgb(255,255,0,0.4)";
-  if (isHovered) {
-    fillColor = "rgb(255,255,0,0.8)";
-  }
-
-  const shapeStyle = {
-    fill: fillColor,
-    strokeWidth: "4",
-    stroke: "rgb(0,0,0)",
+  let shapeStyle = {
+    fill: "rgba(0,0,0,0)",
     pointerEvents: "painted"
   } as React.CSSProperties;
+  if (isHovered) {
+    shapeStyle = {
+        fill: "rgba(255,255,0,0.4)",
+        strokeWidth: "4",
+        stroke: "rgb(0,0,0)",
+        pointerEvents: "painted"
+    } as React.CSSProperties;
+  }
 
   if (area.shape === "rect") {  
     const [ x1, y1, x2, y2 ] = area.coords.split(",");
