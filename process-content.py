@@ -61,8 +61,10 @@ with open(metadataPath) as f:
     for areaPath in os.listdir(pregenContentPath):
         if areaPath.endswith(".areas"):    
             areaName = os.path.splitext(areaPath)[0]
-            print("found areas file: " + areaPath)
-            print("name: " + areaName)
+            print("processing areas file: " + areaPath)
+            if ":" in areaName:
+                print("error: area files like '%s' cannot contain a colon" % areaName)
+                exit(1)
             with open(os.path.join(pregenContentPath, areaPath)) as a:
                 # super hacky way to parse HTML
                 contents = u"<areas>\n" + a.read() + "</areas>\n"
