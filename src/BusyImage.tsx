@@ -145,7 +145,7 @@ const BusyImage = (props: BusyImageProps) => {
   } as React.CSSProperties;
 
   return <div onMouseMove={ mouseMovedCallback } style={imgContainerStyle}>
-    <img alt={props.metadata.title} src={imgUrl} useMap="#partmap" onLoad={onImageLoad} />
+    <img alt={props.metadata.title} src={imgUrl} onLoad={onImageLoad} />
     <div style={overlayStyle}>
     <svg style={svgStyle}>
       { allSVGShapes }
