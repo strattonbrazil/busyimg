@@ -1,3 +1,18 @@
 body {
   overflow-x: auto !important;
 }
+
+.ui.menu  {
+  box-shadow: none !important;
+  border: none !important;
+}
+
+.ui.menu .item {
+  line-height: 0 !important;
+  box-shadow: none !important;
+  border: none !important;
+}
+
+.ui.menu .item:before {
+  width: 0px !important;
+}

@@ -9,7 +9,7 @@ import MetadataStore from './MetadataStore';
 import React from 'react';
 import Metadata from './Metadata';
 
-import { Container, Divider, Grid } from 'semantic-ui-react'
+import { Container, Divider, Grid, Menu } from 'semantic-ui-react'
 import { BusyImage } from './BusyImage';
 import { ImageList } from './ImageList';
 
@@ -51,9 +51,8 @@ const ImagePage = () => {
         <Divider />
         <ImageList />
         <Divider />
-        <a href="https://docs.google.com/forms/d/e/1FAIpQLScQJKr1wSd1u2riaM_Fpqf65KaFDiviDkw3oG1I1_S9w3Zh4A/viewform?usp=sf_link">Report a Mistake</a> | 
-        <a href="https://docs.google.com/forms/d/e/1FAIpQLSc78OI5QJ2nB82BRuLxHS_LkOQjHS2WVcDUOd48o51PRYTThQ/viewform?usp=sf_link">Request an Image</a>
       </Container>
+      <BottomBar />
     </>
   )
 };
@@ -65,9 +64,28 @@ const HomePage = () => {
         <h1>Home</h1>
         <ImageList />
       </Container>
+      <BottomBar />
     </div>
   );
 };
+
+const BottomBar = () => {
+  return (
+    <Container>
+      <Menu>
+        <Menu.Item>
+          <a href="/">Home</a>
+        </Menu.Item>
+        <Menu.Item>
+          <a href="https://docs.google.com/forms/d/e/1FAIpQLScQJKr1wSd1u2riaM_Fpqf65KaFDiviDkw3oG1I1_S9w3Zh4A/viewform?usp=sf_link">Report a Mistake</a>
+        </Menu.Item>
+        <Menu.Item>
+          <a href="https://docs.google.com/forms/d/e/1FAIpQLSc78OI5QJ2nB82BRuLxHS_LkOQjHS2WVcDUOd48o51PRYTThQ/viewform?usp=sf_link">Request an Image</a>
+        </Menu.Item>
+      </Menu>
+    </Container>
+  );
+}
 
 function App() {
   return (
@@ -83,3 +101,4 @@ function App() {
 }
 
 export default App;
+
