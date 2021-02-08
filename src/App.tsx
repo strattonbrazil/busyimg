@@ -9,7 +9,7 @@ import MetadataStore from './MetadataStore';
 import React from 'react';
 import Metadata from './Metadata';
 
-import { Container, Divider, Grid, Menu } from 'semantic-ui-react'
+import { Container, Divider, Menu } from 'semantic-ui-react'
 import { BusyImage } from './BusyImage';
 import { ImageList } from './ImageList';
 

@@ -1,5 +1,6 @@
 import { Grid } from "semantic-ui-react";
 import MetadataStore from "./MetadataStore";
+import React from 'react';
 
 const ms = new MetadataStore();
 
