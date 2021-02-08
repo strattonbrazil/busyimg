@@ -43,14 +43,20 @@ if not os.path.isfile(contentImgPath):
     print("error: %s content file does not exist" % contentImgPath)
     exit(1)
 
-# create the thumbnail
-im = Image.open(contentImgPath)
-im.thumbnail((300, 168))
-im.save(thumbnailImgPath, "JPEG")
-
 # TODO: add other image-checking errors like resolution and file size maximum
 
-
+# create the thumbnail
+MAX_THUMB_WIDTH = 300
+MAX_THUMB_HEIGHT = 168
+im = Image.open(contentImgPath)
+im.thumbnail((MAX_THUMB_WIDTH, MAX_THUMB_HEIGHT))
+im.putalpha(1)
+bg = Image.new("RGBA", (MAX_THUMB_WIDTH, MAX_THUMB_HEIGHT))
+if im.width == MAX_THUMB_WIDTH: # wider than taller
+    bg.alpha_composite(im, (0, int(0.5 * (bg.height - im.height))))
+else: # taller than wider (bars on sides)
+    bg.alpha_composite(im, (int(0.5 * (bg.width - im.width)), 0))
+bg.convert("RGB").save(thumbnailImgPath, "JPEG")
 
 with open(metadataPath) as f:
     metadata = json.load(f)
