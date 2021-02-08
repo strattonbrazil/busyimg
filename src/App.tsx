@@ -1,7 +1,6 @@
 import './App.scss';
 import {
   BrowserRouter as Router,
-  Link,
   Route,
   useParams
 } from "react-router-dom";
@@ -93,6 +92,7 @@ const ImagePage = () => {
         <ImageList />
         <Divider />
       </Container>
+      <BottomBar />
     </>
   )
 };
@@ -104,6 +104,7 @@ const HomePage = () => {
         <h1>Home</h1>
         <ImageList />
       </Container>
+      <BottomBar />
     </div>
   );
 };
@@ -131,11 +132,9 @@ function App() {
     <Router>
       <Route path="/i/:id">
         <ImagePage />
-        <BottomBar />
       </Route>
       <Route exact path="/">
         <HomePage />
-        <BottomBar />
       </Route>
     </Router>
   )
