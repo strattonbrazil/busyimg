@@ -1,6 +1,7 @@
 import './App.scss';
 import {
   BrowserRouter as Router,
+  Link,
   Route,
   useParams
 } from "react-router-dom";
@@ -9,7 +10,7 @@ import MetadataStore from './MetadataStore';
 import React from 'react';
 import Metadata from './Metadata';
 
-import { Container, Divider, Grid } from 'semantic-ui-react'
+import { Container, Divider, Grid, Menu } from 'semantic-ui-react'
 import { BusyImage } from './BusyImage';
 
 const ms = new MetadataStore();
@@ -91,8 +92,6 @@ const ImagePage = () => {
         <Divider />
         <ImageList />
         <Divider />
-        <a href="https://docs.google.com/forms/d/e/1FAIpQLScQJKr1wSd1u2riaM_Fpqf65KaFDiviDkw3oG1I1_S9w3Zh4A/viewform?usp=sf_link">Report a Mistake</a> | 
-        <a href="https://docs.google.com/forms/d/e/1FAIpQLSc78OI5QJ2nB82BRuLxHS_LkOQjHS2WVcDUOd48o51PRYTThQ/viewform?usp=sf_link">Request an Image</a>
       </Container>
     </>
   )
@@ -109,17 +108,38 @@ const HomePage = () => {
   );
 };
 
+const BottomBar = () => {
+  return (
+    <Container>
+      <Menu>
+        <Menu.Item>
+          <a href="/">Home</a>
+        </Menu.Item>
+        <Menu.Item>
+          <a href="https://docs.google.com/forms/d/e/1FAIpQLScQJKr1wSd1u2riaM_Fpqf65KaFDiviDkw3oG1I1_S9w3Zh4A/viewform?usp=sf_link">Report a Mistake</a>
+        </Menu.Item>
+        <Menu.Item>
+          <a href="https://docs.google.com/forms/d/e/1FAIpQLSc78OI5QJ2nB82BRuLxHS_LkOQjHS2WVcDUOd48o51PRYTThQ/viewform?usp=sf_link">Request an Image</a>
+        </Menu.Item>
+      </Menu>
+    </Container>
+  );
+}
+
 function App() {
   return (
     <Router>
       <Route path="/i/:id">
         <ImagePage />
+        <BottomBar />
       </Route>
       <Route exact path="/">
         <HomePage />
+        <BottomBar />
       </Route>
     </Router>
   )
 }
 
 export default App;
+
