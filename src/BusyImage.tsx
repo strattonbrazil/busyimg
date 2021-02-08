@@ -75,8 +75,16 @@ const BusyImage = (props: BusyImageProps) => {
     const rect = ev.currentTarget.getBoundingClientRect();
 
     // set the label position relative to the BusyImg
-    setHoveredLabelX(ev.clientX - rect.x + ev.currentTarget.scrollLeft + 10);
-    setHoveredLabelY(ev.clientY - rect.y + 10);
+    if (ev.clientX + ev.currentTarget.scrollLeft > ev.currentTarget.scrollWidth/2){
+      setHoveredLabelX(ev.clientX - rect.x + ev.currentTarget.scrollLeft - 100);
+    } else {
+      setHoveredLabelX(ev.clientX - rect.x + ev.currentTarget.scrollLeft + 10);
+    };
+    if (ev.clientY - rect.y > ev.currentTarget.scrollHeight/2){
+      setHoveredLabelY(ev.clientY - + rect.y - 100);
+    } else {
+      setHoveredLabelY(ev.clientY - rect.y + 10);
+    };
   }, []);
 
   const onImageLoad = (event: SyntheticEvent<HTMLImageElement,Event>) => {
@@ -112,16 +120,17 @@ const BusyImage = (props: BusyImageProps) => {
     color: "white",
     fontSize: "2em",
     textShadow: "2px 2px black",
-    width: "8em",
+    maxWidth: "8em",
     lineHeight: "1em",
     background: "rgba(0,0,0,0.2)",
-    padding: "3px"
+    padding: "5px"
   } as React.CSSProperties;
   let partLabel = (
     hoveredPartName !== "" && (
       <div style={labelStyle}>{ hoveredPartName }</div>
     )
   );
+
 
   const imgContainerStyle = {
     position: "relative",
