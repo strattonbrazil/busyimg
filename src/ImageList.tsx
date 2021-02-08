@@ -10,28 +10,26 @@ const ImageList = () => {
     ms.metadata.forEach((imgMetadata, index) => {
         const imgUrl = `/static/images/${imgMetadata.subpath}_thumbnail.jpg`;
         const divStyle = {
-        height: "168px", 
-        backgroundColor: "black", 
-        display: "flex", 
-        alignItems: "center", 
-        justifyContent: "center"
+            display: "flex", 
+            alignItems: "center", 
+            justifyContent: "center"
         } as React.CSSProperties;
 
         let imageColumn = <Grid.Column key={index}>
         <div style={{textAlign: "center"}}>
             <div style={divStyle}>
-            <a href={"/i/" + imgMetadata.subpath}><img alt={imgMetadata.title} src={imgUrl} style={{ lineHeight: "168px" }} /></a>
+                <a href={"/i/" + imgMetadata.subpath}><img alt={imgMetadata.title} src={imgUrl} /></a>
             </div>
             <div>
-            <label>{imgMetadata.title}</label>
+                <label>{imgMetadata.title}</label>
             </div>
         </div>
         </Grid.Column>;
 
         if (index % 3 === 0) {
-        rowChunks.push([ imageColumn ]);
+            rowChunks.push([ imageColumn ]);
         } else {
-        rowChunks[rowChunks.length - 1].push(imageColumn);
+            rowChunks[rowChunks.length - 1].push(imageColumn);
         }
     });
 
