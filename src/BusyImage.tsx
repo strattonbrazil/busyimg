@@ -1,4 +1,4 @@
-import { SyntheticEvent, useCallback, useState } from "react";
+import { SyntheticEvent, useCallback, useRef, useState } from "react";
 import Area from "./Area";
 import Metadata from "./Metadata";
 
@@ -18,6 +18,11 @@ const createPartMapping = (areas: Area[]) => {
   return mapping;
 };
 
+const parseNameOrigin = (partName: string) => {
+  const parts = partName.split("(");
+  parts[0].trim();
+  return [parts[0],parts.length > 1 ? "(" + parts[1] : null];
+}
 
 const areaToSVGShapeElement = (area: Area, 
     areaPartKey: string, 
@@ -70,13 +75,16 @@ const BusyImage = (props: BusyImageProps) => {
   let [hoveredLabelY, setHoveredLabelY] = useState(0);
   let [svgWidth, setSVGWidth] = useState("1920px");
   let [svgHeight, setSVGHeight] = useState("1080px");
-  
+  let labelRef= useRef<HTMLDivElement>(null);
+
   const mouseMovedCallback = useCallback((ev: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     const rect = ev.currentTarget.getBoundingClientRect();
 
     // set the label position relative to the BusyImg
+    const maxLabelWidth = labelRef.current !== null ? labelRef.current.offsetWidth : 0;
+
     if (ev.clientX + ev.currentTarget.scrollLeft > ev.currentTarget.scrollWidth/2){
-      setHoveredLabelX(ev.clientX - rect.x + ev.currentTarget.scrollLeft - 100);
+      setHoveredLabelX(ev.clientX - rect.x + ev.currentTarget.scrollLeft - maxLabelWidth);
     } else {
       setHoveredLabelX(ev.clientX - rect.x + ev.currentTarget.scrollLeft + 10);
     };
@@ -120,14 +128,18 @@ const BusyImage = (props: BusyImageProps) => {
     color: "white",
     fontSize: "2em",
     textShadow: "2px 2px black",
-    maxWidth: "8em",
     lineHeight: "1em",
     background: "rgba(0,0,0,0.2)",
-    padding: "5px"
+    padding: "5px",
+    whiteSpace: "nowrap",
+    float: "right"
   } as React.CSSProperties;
+  const [name,origin] = parseNameOrigin(hoveredPartName);
   let partLabel = (
     hoveredPartName !== "" && (
-      <div style={labelStyle}>{ hoveredPartName }</div>
+      <div style={labelStyle} ref={labelRef}>
+        <div>{name}<br />{origin}</div>
+      </div>
     )
   );
 
@@ -166,5 +178,5 @@ const BusyImage = (props: BusyImageProps) => {
   </div>
 }
 
-export { BusyImage };
+export { BusyImage, parseNameOrigin };
 export type { BusyImageProps };
