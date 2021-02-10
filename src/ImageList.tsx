@@ -1,5 +1,6 @@
 import MetadataStore from "./MetadataStore";
-import React from 'react';
+import React, { useState } from 'react';
+import "./ImageList.scss";
 
 interface ImageListProps
 {
@@ -8,6 +9,8 @@ interface ImageListProps
 }
 
 const ImageList = (props: ImageListProps) => {
+    let [hoveredImageId, setHoveredImageId] =  useState("");
+
     let tiles = [] as JSX.Element[];
 
     props.ms.metadata.forEach((imgMetadata, index) => {
@@ -16,17 +19,24 @@ const ImageList = (props: ImageListProps) => {
 
         const href = isActiveImage ? "#" : "/i/" + imgMetadata.subpath;
 
-        const imgStyle = {
-            //"opacity" : isActiveImage ? 0.6 : 1,
-            "background" : "rgba(255,255,255,0.6)",
-            "border" : isActiveImage ? "4px solid #1A0A37" : "4px solid white",
-            "borderRadius": "25px",
-            "cursor": isActiveImage ? "default" : "",
-        } as React.CSSProperties;
+        const onMouseEnter = () => {
+            setHoveredImageId(imgMetadata.subpath);
+        };
+    
+        const onMouseLeave = () => {
+            setHoveredImageId("");
+        };
+
+        let imgClasses = ["thumbnail"];
+        if (isActiveImage) {
+            imgClasses.push("selected");
+        } else if (imgMetadata.subpath === hoveredImageId) {
+            imgClasses.push("hovered");
+        }
 
         let imageColumn =
         <div key={index} style={{textAlign: "center", display: "inline-block", padding: "1em" }}>
-            <a href={href}><img style={imgStyle} alt={imgMetadata.title} src={imgUrl} /></a>
+            <a href={href}><img className={imgClasses.join(" ")} alt={imgMetadata.title} src={imgUrl} onMouseEnter={onMouseEnter} onMouseLeave={onMouseLeave} /></a>
             <div>
                 <label>{imgMetadata.title}</label>
             </div>
