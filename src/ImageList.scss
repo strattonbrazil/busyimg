@@ -1,0 +1,16 @@
+.thumbnail {
+    background: rgba(255,255,255,0.6);
+    border: 4px solid #1A0A37;
+    border-radius: 10px;
+
+    &.hovered {
+        border: 4px solid orange;
+    }
+
+    &.selected {
+        border: 4px solid black;
+        filter: sepia(100%);
+        cursor: "default";
+    }
+}
+
