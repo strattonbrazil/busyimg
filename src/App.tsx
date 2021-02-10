@@ -49,7 +49,7 @@ const ImagePage = () => {
 
       <Container>
         <Divider />
-        <ImageList />
+        <ImageList ms={ms} imageId={id} />
         <Divider />
       </Container>
       <BottomBar />
@@ -62,7 +62,7 @@ const HomePage = () => {
     <div>
       <Container>
         <h1>Home</h1>
-        <ImageList />
+        <ImageList ms={ms} />
       </Container>
       <BottomBar />
     </div>
