@@ -31,7 +31,7 @@ For example (`pregen/lots-of-people-to-see/metadata.json`):
 
 ### 3. Add the source image
 
-Copy the source image into the `public/static/images` directory. The name of the source image basename must be the same as the pregen directory. The image must by a JPEG file and be a maximum of 1920x1080 in size. 
+Copy the source image into the `public/static/images` directory. The name of the source image basename must be the same as the pregen directory. The image must by a JPEG file and be a maximum of 1920x1920 in size. 
 
 Using the example above, this would be:: `public/static/images/lots-of-people-to-see.jpg`
 

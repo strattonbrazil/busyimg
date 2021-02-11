@@ -49,6 +49,10 @@ if not os.path.isfile(contentImgPath):
 MAX_THUMB_WIDTH = 300
 MAX_THUMB_HEIGHT = 168
 im = Image.open(contentImgPath)
+if im.width > 1920 or im.height > 1920:
+    print("error: %s content file is too large, maximum of 1920x1920" % contentImgPath)
+    exit(1)
+
 im.thumbnail((MAX_THUMB_WIDTH, MAX_THUMB_HEIGHT))
 im.putalpha(1)
 bg = Image.new("RGBA", (MAX_THUMB_WIDTH, MAX_THUMB_HEIGHT))
