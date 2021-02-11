@@ -13,6 +13,10 @@ import { Container, Divider, Menu } from 'semantic-ui-react'
 import { BusyImage } from './BusyImage';
 import { ImageList } from './ImageList';
 
+import ReactGA from 'react-ga';
+
+ReactGA.initialize('G-WN0TC6VGY7');
+
 const ms = new MetadataStore();
 
 const subpathToMetadata: { [key: string]: Metadata } = {};
@@ -90,6 +94,10 @@ const BottomBar = () => {
 function App() {
   return (
     <Router>
+      <Route path="/" render={({location}) => {
+        ReactGA.pageview(location.pathname + location.search);
+        return null;
+      }} />
       <Route path="/i/:id">
         <ImagePage />
       </Route>
