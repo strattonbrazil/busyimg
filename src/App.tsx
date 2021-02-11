@@ -15,7 +15,9 @@ import { ImageList } from './ImageList';
 
 import ReactGA from 'react-ga';
 
-ReactGA.initialize('G-WN0TC6VGY7');
+ReactGA.initialize('G-WN0TC6VGY7', {
+  testMode: process.env.NODE_ENV === 'test'
+});
 
 const ms = new MetadataStore();
 
