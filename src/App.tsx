@@ -15,7 +15,7 @@ import { ImageList } from './ImageList';
 
 import ReactGA from 'react-ga';
 
-ReactGA.initialize('G-WN0TC6VGY7', {
+ReactGA.initialize('UA-189463968-1', {
   testMode: process.env.NODE_ENV === 'test'
 });
 
