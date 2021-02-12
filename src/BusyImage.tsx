@@ -76,12 +76,14 @@ const BusyImage = (props: BusyImageProps) => {
   let [svgWidth, setSVGWidth] = useState("1920px");
   let [svgHeight, setSVGHeight] = useState("1080px");
   let labelRef= useRef<HTMLDivElement>(null);
+  let [imageLoaded, setImageLoaded] = useState(false);
 
   const mouseMovedCallback = useCallback((ev: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     const rect = ev.currentTarget.getBoundingClientRect();
 
     // set the label position relative to the BusyImg
     const maxLabelWidth = labelRef.current !== null ? labelRef.current.offsetWidth : 0;
+    const labelHeight = labelRef.current !== null ? labelRef.current.offsetHeight : 0;
 
     if (ev.clientX + ev.currentTarget.scrollLeft > ev.currentTarget.scrollWidth/2){
       setHoveredLabelX(ev.clientX - rect.x + ev.currentTarget.scrollLeft - maxLabelWidth);
@@ -89,15 +91,16 @@ const BusyImage = (props: BusyImageProps) => {
       setHoveredLabelX(ev.clientX - rect.x + ev.currentTarget.scrollLeft + 10);
     };
     if (ev.clientY - rect.y > ev.currentTarget.scrollHeight/2){
-      setHoveredLabelY(ev.clientY - + rect.y - 100);
+      setHoveredLabelY(ev.clientY - rect.y - labelHeight);
     } else {
-      setHoveredLabelY(ev.clientY - rect.y + 10);
+      setHoveredLabelY(ev.clientY - rect.y);
     };
   }, []);
 
   const onImageLoad = (event: SyntheticEvent<HTMLImageElement,Event>) => {
     setSVGWidth(event.currentTarget.width + "px");
     setSVGHeight(event.currentTarget.height + "px");
+    setImageLoaded(true);
   };
 
   const allSVGShapes: (JSX.Element | null)[] = Object.keys(partNames).map((partName, partIndex) => {
@@ -132,7 +135,8 @@ const BusyImage = (props: BusyImageProps) => {
     background: "rgba(0,0,0,0.2)",
     padding: "5px",
     whiteSpace: "nowrap",
-    float: "right"
+    float: "right",
+    pointerEvents: "none"
   } as React.CSSProperties;
   const [name,origin] = parseNameOrigin(hoveredPartName);
   let partLabel = (
@@ -168,9 +172,11 @@ const BusyImage = (props: BusyImageProps) => {
   return <div onMouseMove={ mouseMovedCallback } style={imgContainerStyle}>
     <img alt={props.metadata.title} src={imgUrl} onLoad={onImageLoad} />
     <div style={overlayStyle}>
-    <svg style={svgStyle}>
-      { allSVGShapes }
-    </svg>
+      {imageLoaded && 
+        <svg style={svgStyle}>
+          { allSVGShapes }
+        </svg>
+      }
       {
         partLabel
       }
