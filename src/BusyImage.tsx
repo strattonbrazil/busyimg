@@ -93,7 +93,7 @@ const BusyImage = (props: BusyImageProps) => {
     if (ev.clientY - rect.y > ev.currentTarget.scrollHeight/2){
       setHoveredLabelY(ev.clientY - rect.y - labelHeight);
     } else {
-      setHoveredLabelY(ev.clientY - rect.y + 10);
+      setHoveredLabelY(ev.clientY - rect.y);
     };
   }, []);
 
