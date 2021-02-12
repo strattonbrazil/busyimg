@@ -76,6 +76,7 @@ const BusyImage = (props: BusyImageProps) => {
   let [svgWidth, setSVGWidth] = useState("1920px");
   let [svgHeight, setSVGHeight] = useState("1080px");
   let labelRef= useRef<HTMLDivElement>(null);
+  let [imageLoaded, setImageLoaded] = useState(false);
 
   const mouseMovedCallback = useCallback((ev: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     const rect = ev.currentTarget.getBoundingClientRect();
@@ -99,6 +100,7 @@ const BusyImage = (props: BusyImageProps) => {
   const onImageLoad = (event: SyntheticEvent<HTMLImageElement,Event>) => {
     setSVGWidth(event.currentTarget.width + "px");
     setSVGHeight(event.currentTarget.height + "px");
+    setImageLoaded(true);
   };
 
   const allSVGShapes: (JSX.Element | null)[] = Object.keys(partNames).map((partName, partIndex) => {
@@ -169,9 +171,11 @@ const BusyImage = (props: BusyImageProps) => {
   return <div onMouseMove={ mouseMovedCallback } style={imgContainerStyle}>
     <img alt={props.metadata.title} src={imgUrl} onLoad={onImageLoad} />
     <div style={overlayStyle}>
-    <svg style={svgStyle}>
-      { allSVGShapes }
-    </svg>
+      {imageLoaded && 
+        <svg style={svgStyle}>
+          { allSVGShapes }
+        </svg>
+      }
       {
         partLabel
       }
