@@ -83,6 +83,7 @@ const BusyImage = (props: BusyImageProps) => {
 
     // set the label position relative to the BusyImg
     const maxLabelWidth = labelRef.current !== null ? labelRef.current.offsetWidth : 0;
+    const labelHeight = labelRef.current !== null ? labelRef.current.offsetHeight : 0;
 
     if (ev.clientX + ev.currentTarget.scrollLeft > ev.currentTarget.scrollWidth/2){
       setHoveredLabelX(ev.clientX - rect.x + ev.currentTarget.scrollLeft - maxLabelWidth);
@@ -90,9 +91,9 @@ const BusyImage = (props: BusyImageProps) => {
       setHoveredLabelX(ev.clientX - rect.x + ev.currentTarget.scrollLeft + 10);
     };
     if (ev.clientY - rect.y > ev.currentTarget.scrollHeight/2){
-      setHoveredLabelY(ev.clientY - + rect.y - 100);
+      setHoveredLabelY(ev.clientY - rect.y - labelHeight);
     } else {
-      setHoveredLabelY(ev.clientY - rect.y + 10);
+      setHoveredLabelY(ev.clientY - rect.y);
     };
   }, []);
 
