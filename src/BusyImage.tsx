@@ -135,7 +135,8 @@ const BusyImage = (props: BusyImageProps) => {
     background: "rgba(0,0,0,0.2)",
     padding: "5px",
     whiteSpace: "nowrap",
-    float: "right"
+    float: "right",
+    pointerEvents: "none"
   } as React.CSSProperties;
   const [name,origin] = parseNameOrigin(hoveredPartName);
   let partLabel = (
