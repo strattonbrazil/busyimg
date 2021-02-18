@@ -40,27 +40,27 @@ imageDir = "public/static/images"
 contentImgPath = os.path.join(imageDir, "%s.jpg" % contentName)
 thumbnailImgPath = os.path.join(imageDir, "%s_thumbnail.jpg" % contentName)
 if not os.path.isfile(contentImgPath):
-    print("error: %s content file does not exist" % contentImgPath)
+    print("error: %s content image file does not exist" % contentImgPath)
     exit(1)
 
 # TODO: add other image-checking errors like resolution and file size maximum
 
-# create the thumbnail
-MAX_THUMB_WIDTH = 300
-MAX_THUMB_HEIGHT = 168
 im = Image.open(contentImgPath)
 if im.width > 1920 or im.height > 1920:
     print("error: %s content file is too large, maximum of 1920x1920" % contentImgPath)
     exit(1)
 
-im.thumbnail((MAX_THUMB_WIDTH, MAX_THUMB_HEIGHT))
-im.putalpha(1)
-bg = Image.new("RGBA", (MAX_THUMB_WIDTH, MAX_THUMB_HEIGHT))
-if im.width == MAX_THUMB_WIDTH: # wider than taller
-    bg.alpha_composite(im, (0, int(0.5 * (bg.height - im.height))))
-else: # taller than wider (bars on sides)
-    bg.alpha_composite(im, (int(0.5 * (bg.width - im.width)), 0))
-bg.convert("RGB").save(thumbnailImgPath, "JPEG")
+if not os.path.isfile(thumbnailImgPath):
+    print("error: %s content thumbnail file does not exist" % thumbnailImgPath)
+    exit(1)
+
+# create the thumbnail
+THUMB_WIDTH = 300
+THUMB_HEIGHT = 168
+im = Image.open(thumbnailImgPath)
+if im.width != THUMB_WIDTH or im.height != THUMB_HEIGHT:
+    print("error: %s content thumbnail file must be %ix%i" % (thumbnailImgPath, THUMB_WIDTH, THUMB_HEIGHT))
+    exit(1)
 
 with open(metadataPath) as f:
     metadata = json.load(f)
