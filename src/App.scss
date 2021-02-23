@@ -16,3 +16,9 @@ body {
 .ui.menu .item:before {
   width: 0px !important;
 }
+
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

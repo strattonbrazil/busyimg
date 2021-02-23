@@ -2,20 +2,19 @@ import { render, screen } from '@testing-library/react';
 import { BusyImage, parseNameOrigin } from './BusyImage';
 import React from 'react';
 
-test('renders home header', () => {
-  // render(<App />);
-  // const linkElement = screen.getByText(/Home/i);
-  // expect(linkElement).toBeInTheDocument();
-});
-
 test('splits name and origin', () => {
-  const [name1,origin1] = parseNameOrigin("foo");
-  expect(name1).toBe("foo");
-  expect(origin1).toBe(null);
+  const partLabel1 = parseNameOrigin("terminator");
+  expect(partLabel1.name).toBe("terminator");
+  expect(partLabel1.origin).toBe(null);
 
-  const [name2,origin2] = parseNameOrigin("foo(gnarfle)");
-  expect(name2).toBe("foo");
-  expect(origin2).toBe("(gnarfle)");
+  const partLabel2 = parseNameOrigin("foo(gnarfle)");
+  expect(partLabel2.name).toBe("foo");
+  expect(partLabel2.origin).toBe("gnarfle");
+
+  const partLabel3 = parseNameOrigin("john(paul)jones");
+  expect(partLabel3.name).toBe("john");
+  expect(partLabel3.origin).toBe("paul");
+  expect(partLabel3.year).toBe("jones");
 });
 
 

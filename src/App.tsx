@@ -9,7 +9,7 @@ import MetadataStore from './MetadataStore';
 import React from 'react';
 import Metadata from './Metadata';
 
-import { Container, Divider, Menu } from 'semantic-ui-react'
+import { Button, Container, Divider, Menu } from 'semantic-ui-react'
 import { BusyImage } from './BusyImage';
 import { ImageList } from './ImageList';
 
@@ -31,9 +31,56 @@ interface ImageParam
   id: string;
 }
 
-const ImagePage = () => {
+const ArrowBar = () => {
+  return (
+    <Container className="centered">
+      <Menu>
+        <Menu.Item>
+          <Button icon="left arrow" />
+        </Menu.Item>
+        <Menu.Item>
+          <div>
+            seven of nine
+          </div>          
+        </Menu.Item>
+        <Menu.Item>
+          <Button icon="right arrow" />
+        </Menu.Item>                
+      </Menu>
+    </Container>
+  )
+}
+
+const ThumbnailBar = () => {
   let { id } = useParams<ImageParam>();
 
+  return (
+    <Container>
+      <ImageList ms={ms} imageId={id} />
+    </Container>
+  )
+}
+
+const ContactBar = () => {
+  return (
+    <Container>
+      <Menu>
+        <Menu.Item>
+          <a href="/">Home</a>
+        </Menu.Item>
+        <Menu.Item>
+          <a href="https://docs.google.com/forms/d/e/1FAIpQLScQJKr1wSd1u2riaM_Fpqf65KaFDiviDkw3oG1I1_S9w3Zh4A/viewform?usp=sf_link">Report a Mistake</a>
+        </Menu.Item>
+        <Menu.Item>
+          <a href="https://docs.google.com/forms/d/e/1FAIpQLSc78OI5QJ2nB82BRuLxHS_LkOQjHS2WVcDUOd48o51PRYTThQ/viewform?usp=sf_link">Request an Image</a>
+        </Menu.Item>
+      </Menu>
+    </Container>
+  );
+}
+
+const ImagePage = () => {
+  let { id } = useParams<ImageParam>();
   const metadata = subpathToMetadata[id];
   
   return (
@@ -53,12 +100,12 @@ const ImagePage = () => {
         </Container>
       )}
 
-      <Container>
-        <Divider />
-        <ImageList ms={ms} imageId={id} />
-        <Divider />
-      </Container>
-      <BottomBar />
+      <Divider />
+        <ArrowBar />
+      <Divider />
+        <ThumbnailBar />
+      <Divider />
+        <ContactBar />
     </>
   )
 };
@@ -68,30 +115,12 @@ const HomePage = () => {
     <div>
       <Container>
         <h1>Home</h1>
-        <ImageList ms={ms} />
+        <ThumbnailBar />
       </Container>
-      <BottomBar />
+      <ContactBar />
     </div>
   );
 };
-
-const BottomBar = () => {
-  return (
-    <Container>
-      <Menu>
-        <Menu.Item>
-          <a href="/">Home</a>
-        </Menu.Item>
-        <Menu.Item>
-          <a href="https://docs.google.com/forms/d/e/1FAIpQLScQJKr1wSd1u2riaM_Fpqf65KaFDiviDkw3oG1I1_S9w3Zh4A/viewform?usp=sf_link">Report a Mistake</a>
-        </Menu.Item>
-        <Menu.Item>
-          <a href="https://docs.google.com/forms/d/e/1FAIpQLSc78OI5QJ2nB82BRuLxHS_LkOQjHS2WVcDUOd48o51PRYTThQ/viewform?usp=sf_link">Request an Image</a>
-        </Menu.Item>
-      </Menu>
-    </Container>
-  );
-}
 
 function App() {
   return (
