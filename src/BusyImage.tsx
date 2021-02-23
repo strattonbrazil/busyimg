@@ -18,10 +18,23 @@ const createPartMapping = (areas: Area[]) => {
   return mapping;
 };
 
-const parseNameOrigin = (partName: string) => {
-  const parts = partName.split("(");
-  parts[0].trim();
-  return [parts[0],parts.length > 1 ? "(" + parts[1] : null];
+interface PartLabels {
+  name: String;
+  origin: String | null;
+  year: String | null;
+}
+
+const regexSplitter = new RegExp("\\(|\\)");
+const parseNameOrigin = (partName: string): PartLabels => {
+  const parts = partName.split(regexSplitter,3);
+  parts.forEach((val:String, index) => {
+    parts[index] = val.trim();
+  })
+  return {
+    "name" : parts[0],
+    "origin" : parts.length > 1 ? parts[1] : null,
+    "year" : parts.length === 3 ? parts[2] : null
+  }
 }
 
 const areaToSVGShapeElement = (area: Area, 
@@ -129,20 +142,34 @@ const BusyImage = (props: BusyImageProps) => {
     left: hoveredLabelX,
     top: hoveredLabelY,
     color: "white",
-    fontSize: "2em",
     textShadow: "2px 2px black",
-    lineHeight: "1em",
-    background: "rgba(0,0,0,0.2)",
+    background: "rgba(0,0,0,0.5)",
     padding: "5px",
     whiteSpace: "nowrap",
     float: "right",
-    pointerEvents: "none"
+    pointerEvents: "none",
+    borderRadius: "6px",
   } as React.CSSProperties;
-  const [name,origin] = parseNameOrigin(hoveredPartName);
+  
+  const firstLineStyle = {
+    fontSize: "2em",
+    lineHeight: "1em",
+  } as React.CSSProperties;  
+
+  const secondLineStyle = {
+    fontSize: "1.4em",
+    lineHeight: "0.8em",
+  } as React.CSSProperties;
+
+  const partLabels = parseNameOrigin(hoveredPartName);
   let partLabel = (
     hoveredPartName !== "" && (
       <div style={labelStyle} ref={labelRef}>
-        <div>{name}<br />{origin}</div>
+        <div style={firstLineStyle}>{partLabels.name}</div>
+        <div style={secondLineStyle}>
+          { partLabels.origin && <i> {partLabels.origin} </i> }
+          { partLabels.year && "(" + partLabels.year + ")" }
+        </div>
       </div>
     )
   );
