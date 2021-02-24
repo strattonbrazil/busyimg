@@ -9,7 +9,7 @@ import MetadataStore from './MetadataStore';
 import React from 'react';
 import Metadata from './Metadata';
 
-import { Button, Container, Divider, Menu } from 'semantic-ui-react'
+import { Button, Container, Divider, Icon, Menu } from 'semantic-ui-react'
 import { BusyImage } from './BusyImage';
 import { ImageList } from './ImageList';
 
@@ -22,29 +22,50 @@ ReactGA.initialize('UA-189463968-1', {
 const ms = new MetadataStore();
 
 const subpathToMetadata: { [key: string]: Metadata } = {};
-ms.metadata.forEach(element => {
+const subpathToMetadataIndex: { [key: string]: number} = {}
+const indexToSubpath: { [key: number]: string} = {}
+ms.metadata.forEach((element, index) => {
   subpathToMetadata[element.subpath] = element;
+  subpathToMetadataIndex[element.subpath] = index;
+  indexToSubpath[index] = element.subpath;
 });
+
 
 interface ImageParam
 {
   id: string;
 }
 
-const ArrowBar = () => {
+interface ArrowBarProps
+{
+  imageIndex: number;
+  numImages: number;
+}
+
+const ArrowBar = (props: ArrowBarProps) => {
+  const prevImageIndex = (props.imageIndex + props.numImages - 1) % props.numImages;
+  const prevHref = "/i/" + indexToSubpath[prevImageIndex];
+  
+  const nextImageIndex = (props.imageIndex + 1) % props.numImages;
+  const nextHref = "/i/" + indexToSubpath[nextImageIndex];
+
   return (
     <Container className="centered">
       <Menu>
         <Menu.Item>
-          <Button icon="left arrow" />
+          <a href={prevHref}>
+            <Button icon labelPosition='left'>prev<Icon name="arrow left" /></Button>
+         </a>
         </Menu.Item>
         <Menu.Item>
           <div>
-            seven of nine
+            <b>{props.imageIndex+1}</b> <i>of</i> <b>{props.numImages}</b>
           </div>          
         </Menu.Item>
         <Menu.Item>
-          <Button icon="right arrow" />
+          <a href={nextHref}>
+            <Button icon labelPosition='right'>next<Icon name="arrow right" /></Button>
+          </a>
         </Menu.Item>                
       </Menu>
     </Container>
@@ -82,7 +103,8 @@ const ContactBar = () => {
 const ImagePage = () => {
   let { id } = useParams<ImageParam>();
   const metadata = subpathToMetadata[id];
-  
+  const imgIndex = subpathToMetadataIndex[id];
+
   return (
     <>
       { metadata && (
@@ -92,6 +114,7 @@ const ImagePage = () => {
             <h3>by <a href={metadata.creatorLink}>{ metadata.creator }</a></h3>
           </Container>
           <BusyImage metadata={ metadata } />
+          <ArrowBar imageIndex={imgIndex} numImages={ms.metadata.length} />
         </>
       )}
       { !metadata && (
@@ -101,11 +124,9 @@ const ImagePage = () => {
       )}
 
       <Divider />
-        <ArrowBar />
+      <ThumbnailBar />
       <Divider />
-        <ThumbnailBar />
-      <Divider />
-        <ContactBar />
+      <ContactBar />
     </>
   )
 };
