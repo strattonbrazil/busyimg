@@ -9,11 +9,12 @@ import MetadataStore from './MetadataStore';
 import React from 'react';
 import Metadata from './Metadata';
 
-import { Button, Container, Divider, Icon, Menu } from 'semantic-ui-react'
+import { Container, Divider, Menu } from 'semantic-ui-react'
 import { BusyImage } from './BusyImage';
 import { ImageList } from './ImageList';
 
 import ReactGA from 'react-ga';
+import { ArrowBar } from './ArrowBar';
 
 ReactGA.initialize('UA-189463968-1', {
   testMode: process.env.NODE_ENV === 'test'
@@ -34,42 +35,6 @@ ms.metadata.forEach((element, index) => {
 interface ImageParam
 {
   id: string;
-}
-
-interface ArrowBarProps
-{
-  imageIndex: number;
-  numImages: number;
-}
-
-const ArrowBar = (props: ArrowBarProps) => {
-  const prevImageIndex = (props.imageIndex + props.numImages - 1) % props.numImages;
-  const prevHref = "/i/" + indexToSubpath[prevImageIndex];
-  
-  const nextImageIndex = (props.imageIndex + 1) % props.numImages;
-  const nextHref = "/i/" + indexToSubpath[nextImageIndex];
-
-  return (
-    <Container className="centered">
-      <Menu>
-        <Menu.Item>
-          <a href={prevHref}>
-            <Button icon labelPosition='left'>prev<Icon name="arrow left" /></Button>
-         </a>
-        </Menu.Item>
-        <Menu.Item>
-          <div>
-            <b>{props.imageIndex+1}</b> <i>of</i> <b>{props.numImages}</b>
-          </div>          
-        </Menu.Item>
-        <Menu.Item>
-          <a href={nextHref}>
-            <Button icon labelPosition='right'>next<Icon name="arrow right" /></Button>
-          </a>
-        </Menu.Item>                
-      </Menu>
-    </Container>
-  )
 }
 
 const ThumbnailBar = () => {
@@ -105,6 +70,13 @@ const ImagePage = () => {
   const metadata = subpathToMetadata[id];
   const imgIndex = subpathToMetadataIndex[id];
 
+  const numImages = ms.metadata.length;
+  const prevImageIndex = (imgIndex + numImages - 1) % numImages;
+  const prevHref = "/i/" + indexToSubpath[prevImageIndex];
+  
+  const nextImageIndex = (imgIndex + 1) % numImages;
+  const nextHref = "/i/" + indexToSubpath[nextImageIndex];
+
   return (
     <>
       { metadata && (
@@ -114,7 +86,7 @@ const ImagePage = () => {
             <h3>by <a href={metadata.creatorLink}>{ metadata.creator }</a></h3>
           </Container>
           <BusyImage metadata={ metadata } />
-          <ArrowBar imageIndex={imgIndex} numImages={ms.metadata.length} />
+          <ArrowBar imageIndex={imgIndex} numImages={numImages} prevHref={prevHref} nextHref={nextHref} />
         </>
       )}
       { !metadata && (
