@@ -1,6 +1,6 @@
 import { SyntheticEvent, useCallback, useRef, useState } from "react";
 import Area from "./Area";
-import Metadata from "./Metadata";
+import { Metadata } from "./Metadata";
 
 interface BusyImageProps
 {

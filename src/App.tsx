@@ -7,9 +7,9 @@ import {
 
 import MetadataStore from './MetadataStore';
 import React from 'react';
-import Metadata from './Metadata';
+import { Ad, Metadata } from './Metadata';
 
-import { Container, Divider, Menu } from 'semantic-ui-react'
+import { Container, Divider, Grid, List, Menu } from 'semantic-ui-react'
 import { BusyImage } from './BusyImage';
 import { ImageList } from './ImageList';
 
@@ -36,6 +36,27 @@ interface ImageParam
 {
   id: string;
 }
+
+interface FundingBlurbProps
+{
+  ads: Ad[]
+}
+
+const FundingBlurb = (props: FundingBlurbProps) => {
+  const listItems = props.ads.map((ad: Ad, index) => {
+    // TODO: choose appropriate icon type based on ad
+    return <List.Item key={index}>
+      <List.Icon name='users' />
+      <List.Content><a href={ad.link}>{ad.text}</a></List.Content>
+    </List.Item>;
+  });
+  return <div style={{display: "inline-block", padding: "1em"}}>
+    <b>Humble Request</b> - This site requires a bit of money to keep online. Please consider supporting us by using one of our affliate links below:
+    <List>
+      { listItems }
+    </List>
+  </div>;
+};
 
 const ThumbnailBar = () => {
   let { id } = useParams<ImageParam>();
@@ -86,7 +107,20 @@ const ImagePage = () => {
             <h3>by <a href={metadata.creatorLink}>{ metadata.creator }</a></h3>
           </Container>
           <BusyImage metadata={ metadata } />
-          <ArrowBar imageIndex={imgIndex} numImages={numImages} prevHref={prevHref} nextHref={nextHref} />
+          <Container>
+            <Grid stackable>
+              <Grid.Row>
+                <Grid.Column width={8}>
+                  <ArrowBar imageIndex={imgIndex} numImages={numImages} prevHref={prevHref} nextHref={nextHref} />
+                </Grid.Column>
+                { metadata.ads.length > 0 && 
+                  <Grid.Column width={8}>
+                      <FundingBlurb ads={metadata.ads}></FundingBlurb>
+                  </Grid.Column>
+                }
+              </Grid.Row>
+            </Grid>
+          </Container>
         </>
       )}
       { !metadata && (

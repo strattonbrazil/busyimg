@@ -34,6 +34,11 @@ def areasToTypescript(areas):
     typescript += "\n    ]\n"
     return typescript
 
+def adsToTypescript(ads):
+    adLines = ["        " + json.dumps(ad) for ad in ads]
+    typescript = ",\n".join(adLines)
+    return typescript
+
 contentName = pregenContentPath.split("pregen" + os.path.sep)[-1].strip(os.path.sep)
 
 imageDir = "public/static/images"
@@ -89,17 +94,25 @@ with open(metadataPath) as f:
                 
     print(areas)
 
+    if "ads" in metadata:
+        ads = metadata["ads"]
+    else:
+        ads = []
+
     typescript = """
-import Metadata from '../Metadata'
+import { Metadata } from '../Metadata'
 
 export default {
     "title": "%s",
     "subpath": "%s",
     "creator": "%s",
     "creatorLink": "%s",
+    "ads": [
+%s
+    ],
     "areas": %s
 } as Metadata;
-""" % (metadata["title"], contentName, metadata["creator"], metadata["creator-link"], areasToTypescript(areas))
+""" % (metadata["title"], contentName, metadata["creator"], metadata["creator-link"], adsToTypescript(ads), areasToTypescript(areas))
 
     print(typescript)
 

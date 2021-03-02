@@ -1,7 +1,19 @@
 { 
     "title": "Another Night at the Warp Core Cafe",
     "creator": "Jeff Carlisle",
-    "creator-link": "http://jeffcarlisle.com/node/514"
+    "creator-link": "http://jeffcarlisle.com/node/514",
+    "ads": [
+        {
+            "adType" : "Amazon film rental",
+            "text" : "Spaceballs - a Mel Brookes space parody we highly recommend",
+            "link" : "https://yahoo.com"
+        },
+        {
+            "adType" : "Amazon film rental",
+            "text" : "The Last Starfighter - a great fish-out-of-water space dogfight",
+            "link" : "https://yahoo.com"
+        }
+    ]
 }
 
 

@@ -1,5 +1,5 @@
 import React from "react";
-import { Button, Container, Icon, Menu } from "semantic-ui-react";
+import { Button, Icon, Menu } from "semantic-ui-react";
 
 interface ArrowBarProps
 {
@@ -11,25 +11,23 @@ interface ArrowBarProps
 
 const ArrowBar = (props: ArrowBarProps) => {
   return (
-    <Container className="centered">
-      <Menu>
+    <Menu compact>
         <Menu.Item>
-          <a href={props.prevHref}>
+            <a href={props.prevHref}>
             <Button icon labelPosition='left'>prev<Icon name="arrow left" /></Button>
-         </a>
+            </a>
         </Menu.Item>
         <Menu.Item>
-          <div>
+            <div>
             <b>{props.imageIndex+1}</b> <i>of</i> <b>{props.numImages}</b>
-          </div>          
+            </div>          
         </Menu.Item>
         <Menu.Item>
-          <a href={props.nextHref}>
+            <a href={props.nextHref}>
             <Button icon labelPosition='right'>next<Icon name="arrow right" /></Button>
-          </a>
+            </a>
         </Menu.Item>                
-      </Menu>
-    </Container>
+    </Menu>
   )
 }
 
