@@ -63,7 +63,7 @@ const FundingBlurb = (props: FundingBlurbProps) => {
       <List.Content verticalAlign="middle"><a href={ad.link}>{ad.text}</a></List.Content>
     </List.Item>;
   });
-  return <div style={{display: "inline-block", padding: "1em"}}>
+  return <div style={{display: "inline-block", padding: ".4em"}}>
     <b>Humble Request</b> - This site requires a bit of money to keep online. Please consider supporting us by purchasing or renting something using one of our affliate links below:
     <List>
       { listItems }

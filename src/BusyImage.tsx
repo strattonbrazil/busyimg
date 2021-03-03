@@ -178,7 +178,8 @@ const BusyImage = (props: BusyImageProps) => {
   const imgContainerStyle = {
     position: "relative",
     overflowX: "scroll", 
-    overflowY: "hidden"
+    overflowY: "hidden",
+    marginBottom: ".8em"
   } as React.CSSProperties;
 
   const overlayStyle = {
