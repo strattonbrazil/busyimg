@@ -6,12 +6,17 @@
         {
             "adType" : "Amazon film rental",
             "text" : "Spaceballs - a Mel Brookes space parody we highly recommend",
-            "link" : "https://yahoo.com"
+            "link" : "https://www.amazon.com/gp/product/B003UAHIM0/ref=as_li_qf_asin_il_tl?ie=UTF8&tag=busyimg-20&creative=9325&linkCode=as2&creativeASIN=B003UAHIM0&linkId=5c8527e59ff5c6106b9a644dbd53c3e9"
         },
         {
             "adType" : "Amazon film rental",
             "text" : "The Last Starfighter - a great fish-out-of-water space dogfight",
-            "link" : "https://yahoo.com"
+            "link" : "https://www.amazon.com/gp/product/B009CGB1SS/ref=as_li_qf_asin_il_tl?ie=UTF8&tag=busyimg-20&creative=9325&linkCode=as2&creativeASIN=B009CGB1SS&linkId=c9f4882055ef0a5edecb57710d7e01a3"
+        },
+        {
+            "adType" : "Amazon book",
+            "text" : "The Hitchhiker's Guide to the Galaxy - a wonderful blend of humor and science fiction",
+            "link" : "https://www.amazon.com/gp/product/0345418913/ref=as_li_qf_asin_il_tl?ie=UTF8&tag=busyimg-20&creative=9325&linkCode=as2&creativeASIN=0345418913&linkId=5efd7bdc90a9c6dc04a2c0dfec6bf46c"
         }
     ]
 }

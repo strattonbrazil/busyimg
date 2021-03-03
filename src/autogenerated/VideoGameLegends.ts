@@ -7,7 +7,7 @@ export default {
     "creator": "Patrick Brown",
     "creatorLink": "https://www.deviantart.com/patrickbrown/gallery",
     "ads": [
-
+        {"adType": "Amazon game purchase", "link": "https://www.amazon.com/gp/product/B07WLT1C27/ref=as_li_qf_asin_il_tl?ie=UTF8&tag=busyimg-20&creative=9325&linkCode=as2&creativeASIN=B07WLT1C27&linkId=6211eade86ef7a7212e5c9d62e3599b3", "text": "Spiderman (PS4) - one of the best Superhero video games"}
     ],
     "areas": [
         { name: "Lara Croft (Tomb Raider)", shape: "poly", coords: "71,412,187,391,193,446,136,466,129,495,126,540,168,629,207,698,260,763,290,769,312,768,275,729,243,646,224,600,236,585,288,546,365,554,397,644,446,683,443,722,436,770,478,793,487,826,477,858,482,919,468,946,260,949,229,851,197,804,163,744,136,690,100,607,68,536,56,487,58,441" },

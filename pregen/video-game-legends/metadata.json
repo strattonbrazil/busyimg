@@ -1,7 +1,14 @@
 { 
     "title": "Video Game Legends",
     "creator": "Patrick Brown",
-    "creator-link": "https://www.deviantart.com/patrickbrown/gallery"
+    "creator-link": "https://www.deviantart.com/patrickbrown/gallery",
+    "ads": [
+        {
+            "adType" : "Amazon game purchase",
+            "text" : "Spiderman (PS4) - one of the best Superhero video games",
+            "link" : "https://www.amazon.com/gp/product/B07WLT1C27/ref=as_li_qf_asin_il_tl?ie=UTF8&tag=busyimg-20&creative=9325&linkCode=as2&creativeASIN=B07WLT1C27&linkId=6211eade86ef7a7212e5c9d62e3599b3"
+        }
+    ]
 }
 
 

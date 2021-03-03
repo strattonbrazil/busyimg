@@ -7,7 +7,7 @@ import {
 
 import MetadataStore from './MetadataStore';
 import React from 'react';
-import { Ad, Metadata } from './Metadata';
+import { Ad, AdType, Metadata } from './Metadata';
 
 import { Container, Divider, Grid, List, Menu } from 'semantic-ui-react'
 import { BusyImage } from './BusyImage';
@@ -43,15 +43,28 @@ interface FundingBlurbProps
 }
 
 const FundingBlurb = (props: FundingBlurbProps) => {
+  const adTypeToIconName = (adType: AdType) => {
+    switch (adType) {
+      case "Amazon film rental":
+        return "film";
+      case "Amazon game purchase":
+        return "gamepad"
+      case "Amazon book":
+        return "book";
+      default: 
+        return "tablet";
+    }
+  };
+  
   const listItems = props.ads.map((ad: Ad, index) => {
     // TODO: choose appropriate icon type based on ad
     return <List.Item key={index}>
-      <List.Icon name='users' />
-      <List.Content><a href={ad.link}>{ad.text}</a></List.Content>
+      <List.Icon size="large" name={adTypeToIconName(ad.adType)} />
+      <List.Content verticalAlign="middle"><a href={ad.link}>{ad.text}</a></List.Content>
     </List.Item>;
   });
   return <div style={{display: "inline-block", padding: "1em"}}>
-    <b>Humble Request</b> - This site requires a bit of money to keep online. Please consider supporting us by using one of our affliate links below:
+    <b>Humble Request</b> - This site requires a bit of money to keep online. Please consider supporting us by purchasing or renting something using one of our affliate links below:
     <List>
       { listItems }
     </List>

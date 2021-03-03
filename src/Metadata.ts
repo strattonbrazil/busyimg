@@ -1,6 +1,6 @@
 import Area from './Area';
 
-type AdType = "Amazon film rental" | "Amazon Game Purchase"
+type AdType = "Amazon film rental" | "Amazon game purchase" | "Amazon book"
 
 interface Ad
 {
@@ -18,4 +18,4 @@ interface Metadata
     areas: Area[];
 }
 
-export type { Ad, Metadata };
+export type { Ad, AdType, Metadata };

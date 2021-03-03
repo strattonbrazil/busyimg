@@ -7,8 +7,9 @@ export default {
     "creator": "Jeff Carlisle",
     "creatorLink": "http://jeffcarlisle.com/node/514",
     "ads": [
-        {"adType": "Amazon film rental", "link": "https://yahoo.com", "text": "Spaceballs - a Mel Brookes space parody we highly recommend"},
-        {"adType": "Amazon film rental", "link": "https://yahoo.com", "text": "The Last Starfighter - a great fish-out-of-water space dogfight"}
+        {"adType": "Amazon film rental", "link": "https://www.amazon.com/gp/product/B003UAHIM0/ref=as_li_qf_asin_il_tl?ie=UTF8&tag=busyimg-20&creative=9325&linkCode=as2&creativeASIN=B003UAHIM0&linkId=5c8527e59ff5c6106b9a644dbd53c3e9", "text": "Spaceballs - a Mel Brookes space parody we highly recommend"},
+        {"adType": "Amazon film rental", "link": "https://www.amazon.com/gp/product/B009CGB1SS/ref=as_li_qf_asin_il_tl?ie=UTF8&tag=busyimg-20&creative=9325&linkCode=as2&creativeASIN=B009CGB1SS&linkId=c9f4882055ef0a5edecb57710d7e01a3", "text": "The Last Starfighter - a great fish-out-of-water space dogfight"},
+        {"adType": "Amazon book", "link": "https://www.amazon.com/gp/product/0345418913/ref=as_li_qf_asin_il_tl?ie=UTF8&tag=busyimg-20&creative=9325&linkCode=as2&creativeASIN=0345418913&linkId=5efd7bdc90a9c6dc04a2c0dfec6bf46c", "text": "The Hitchhiker's Guide to the Galaxy - a wonderful blend of humor and science fiction"}
     ],
     "areas": [
         { name: "VINCENT (The Black Hole)", shape: "poly", coords: "299,642,301,655,309,662,315,661,323,658,327,654,342,655,350,660,358,658,364,652,366,644,361,639,374,637,374,622,366,617,363,609,357,598,351,595,355,589,355,578,350,571,333,569,322,570,312,573,308,582,311,590,314,596,308,601,302,611,297,624" },
