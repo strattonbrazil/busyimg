@@ -64,7 +64,7 @@ const FundingBlurb = (props: FundingBlurbProps) => {
     </List.Item>;
   });
   return <div style={{display: "inline-block", padding: ".4em"}}>
-    <b>Humble Request</b> - This site requires a bit of money to keep online. Please consider supporting us by purchasing or renting something using one of our affliate links below:
+    <b>Humble Request</b> - This site requires a bit of money to keep online. Please consider supporting us by purchasing or renting something using one of our affiliate links below:
     <List>
       { listItems }
     </List>
