@@ -2,11 +2,11 @@
 
 #### Getting *something* out instead of nothing
 
-BusyImg (busyimg.com) is a simple and fun site to display images with many details and annotations so users can inspect them. 
+BusyImg (busyimg.com) is a simple and fun site to display images with many details and annotations so users can inspect them. The image [Another Night at the Warp Core Cafe](https://busyimg.com/i/warp-core-cafe) by [Jeff Carlisle](http://jeffcarlisle.com/) is an example image that inspired me to write this app. 
 
-Generally speaking all the functionality needed for a normal user browsing the site can be handled using static webpages. The architecture questions then relate to the tooling to generate the content.
+All the functionality needed for a normal user browsing the site can be handled using static webpages. The architecture questions then relate to the tooling to generate the content.
 
-This architecture is a series of compromises to get this small project out into production--cut scope or never release it. Ideally many of these decisions can be improved as needed. Below is rundown of a good-enough-for-now solution to get the idea out in production. 
+This architecture described below is a series of compromises to get this small project out into production with a limited time investment--cut scope or never release it. Ideally many of these decisions can be improved as needed, but is a good-enough-for-now solution. 
 
 ![Example annotation in a picture](lara.png)
 
