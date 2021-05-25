@@ -2,11 +2,12 @@ import './App.scss';
 import {
   BrowserRouter as Router,
   Route,
+  useLocation,
   useParams
 } from "react-router-dom";
 
 import MetadataStore from './MetadataStore';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Ad, AdType, Metadata } from './Metadata';
 
 import { Container, Divider, Grid, List, Menu } from 'semantic-ui-react'
@@ -162,13 +163,19 @@ const HomePage = () => {
   );
 };
 
+const Analytics = () => {
+  let location = useLocation();
+  useEffect(() => {
+    ReactGA.pageview(location.pathname + location.search);
+  }, [location]);
+
+  return null;
+};
+
 function App() {
   return (
     <Router>
-      <Route path="/" render={({location}) => {
-        ReactGA.pageview(location.pathname + location.search);
-        return null;
-      }} />
+      <Analytics />
       <Route path="/i/:id">
         <ImagePage />
       </Route>
